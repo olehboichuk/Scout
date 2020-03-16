@@ -1,0 +1,7 @@
+<mat-toolbar class="bar">
+  <span class="filler"></span>
+  <button class="bar__item" mat-button routerLink="/clubs">КЛУБИ</button>
+  <button class="bar__item" mat-button routerLink="/players">ГРАВЦІ</button>
+  <button *ngIf="!_authService.isLoggedIn()" class="bar__item" mat-button routerLink="/login">УВІЙТИ</button>
+  <button *ngIf="_authService.isLoggedIn()" class="bar__item" mat-button routerLink="/">ВИЙТИ</button>
+</mat-toolbar>
