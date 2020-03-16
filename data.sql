@@ -76,7 +76,7 @@ CREATE TABLE PLAYER
     Number_Licenses CHAR(17)    NOT NULL,
     First_Name      VARCHAR(20) NOT NULL,
     Surname         VARCHAR(30) NOT NULL,
-    Patronymic      VARCHAR(25) NOT NULL,
+    Patronymic      VARCHAR(25) NULL,
     Citizenship     VARCHAR(25) NOT NULL,
     Update_Date     DATE        NOT NULL,
     Birthday        DATE        NOT NULL,
@@ -87,7 +87,7 @@ CREATE TABLE PLAYER
     Height          FLOAT       NOT NULL,
     Weight          FLOAT       NOT NULL,
     Kicking_Leg     VARCHAR(15) NOT NULL,
-    Agent           VARCHAR(15) NOT NULL,
+    Agent           VARCHAR(15)  NULL,
     PRIMARY KEY (Number_Licenses)
 );
 
@@ -95,6 +95,8 @@ CREATE TABLE PLAYER_CONTRACT
 (
     Name_Club       VARCHAR(25) NOT NULL,
     Number_Licenses CHAR(17)    NOT NULL,
+    Contract_Start DATE  NOT NULL,
+    Contract_End DATE  NOT NULL,
     PRIMARY KEY (Name_Club, Number_Licenses),
     FOREIGN KEY (Name_Club) REFERENCES CLUB (Name_Club) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (Number_Licenses) REFERENCES PLAYER (Number_Licenses) ON DELETE NO ACTION ON UPDATE CASCADE
