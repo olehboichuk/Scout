@@ -1,1 +1,49 @@
-<p>players works!</p>
+<main>
+  <div class="content">
+    <mat-spinner *ngIf="loading"></mat-spinner>
+    <div class="mat-elevation-z8">
+      <table mat-table [dataSource]="dataSource" *ngIf="users.length > 0 && !loading">
+
+        <!-- Position Column -->
+        <ng-container matColumnDef="Name">
+          <th mat-header-cell *matHeaderCellDef> Прізвище Ім'я </th>
+          <td class="complaints__count" mat-cell *matCellDef="let element" [routerLink]="['/player',element.Number_Licenses]"> {{element.First_Name}} {{element.Surname}} </td>
+        </ng-container>
+
+        <!-- Name Column -->
+        <ng-container matColumnDef="Surname">
+          <th mat-header-cell *matHeaderCellDef> Позиція </th>
+          <td mat-cell *matCellDef="let element"> {{element.Surname}} </td>
+        </ng-container>
+
+        <!-- Weight Column -->
+        <ng-container matColumnDef="Age">
+          <th mat-header-cell *matHeaderCellDef> Вік </th>
+          <td mat-cell *matCellDef="let element"> {{element.Age}}р. </td>
+        </ng-container>
+
+        <ng-container matColumnDef="Game_Experience">
+          <th mat-header-cell *matHeaderCellDef> Досвід </th>
+          <td mat-cell *matCellDef="let element"> {{element.Game_Experience}}р. </td>
+        </ng-container>
+
+        <ng-container matColumnDef="Kicking_Leg">
+          <th mat-header-cell *matHeaderCellDef> Б'юча нога </th>
+          <td mat-cell *matCellDef="let element"> {{element.Kicking_Leg}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="Cost">
+          <th mat-header-cell *matHeaderCellDef> Ціна </th>
+          <td mat-cell *matCellDef="let element" > {{element.Cost}}₴ </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+      <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+      <p class="info-text mat-body-2" *ngIf="users.length <= 0">No Users Yet</p>
+      <p class="info-text mat-body-2" *ngIf="loading">Loading...</p>
+
+    </div>
+  </div>
+</main>

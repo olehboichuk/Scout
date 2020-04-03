@@ -6,6 +6,8 @@ import {HttpClient} from "@angular/common/http";
 })
 
 export class UserService {
+  public _logInUser = false;
+
   constructor(private http: HttpClient) {
   }
 }
