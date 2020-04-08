@@ -16,15 +16,15 @@ let db = mysql.createConnection({
 });
 
 router.post('/register', function(req, res) {
-    let hashedPassword = bcrypt.hashSync(req.body.password, 8);
+    let hashedPassword = bcrypt.hashSync(req.body.Password, 8);
     console.log(req.body);
-    db.query(sql.createUser, [req.body.login,req.body.email,hashedPassword,req.body.first_name,req.body.last_name,req.body.role], (err, result) => {
-        if (err) return res.status(500).send("There was a problem registering the user.")
+    db.query(sql.createUser, [req.body.Login,req.body.Email,hashedPassword,req.body.First_name,req.body.Last_name], (err, result) => {
+        if (err) return res.status(500).send("There was a problem registering the user.");
         // create a token
         // let token = jwt.sign({ id: result.Id }, config.secret, {
         //     expiresIn: 86400 // expires in 24 hours
         // });
-        res.status(200).send();
+        res.status(200).send({ message: "User success added." });
     });
 });
 

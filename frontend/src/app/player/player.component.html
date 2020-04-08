@@ -1,1 +1,405 @@
-<p>player works!</p>
+<div class="content">
+  <div class="profile" *ngIf="!loading">
+    <form (ngSubmit)="onSubmit()" [formGroup]="changeForm">
+      <div class="player">
+        <img class="img" src="../../assets/img/player.png" alt="Player">
+        <div class="pl__btn">
+          <div class="player__info">
+            <div class="form__user">
+              <div *ngIf="edited" class="player__item">
+                <p class="player--text">Ім'я:</p>
+                <p class="player__name">{{player.First_Name}}</p>
+              </div>
+              <mat-form-field *ngIf="!edited" class="form__input">
+                <input matInput type="text" formControlName="First_Name" pattern="[A-Z,А-Я]{1}[a-z,а-я]{2,20}"
+                       placeholder="Ім'я:" value="{{player.First_Name}}"/>
+              </mat-form-field>
+              <div *ngIf="edited" class="player__item">
+                <p class="player--text">Прізвище:</p>
+                <p class="player__name">{{player.Surname}}</p>
+              </div>
+              <mat-form-field *ngIf="!edited" class="form__input">
+                <input matInput type="text" formControlName="Surname" pattern="[A-Z,А-Я]{1}[a-z,а-я]{2,20}"
+                       placeholder="Прізвище:" value="{{player.Surname}}"/>
+              </mat-form-field>
+              <div *ngIf="edited" class="player__item">
+                <p class="player--text">По-батькові:</p>
+                <p class="player__name">{{player.Patronymic}}</p>
+              </div>
+              <mat-form-field *ngIf="!edited" class="form__input">
+                <input matInput type="text" formControlName="Patronymic" pattern="[A-Z,А-Я]{1}[a-z,а-я]{2,20}"
+                       placeholder="По-батькові:" value="{{player.Patronymic}}"/>
+              </mat-form-field>
+              <div *ngIf="edited" class="player__item">
+                <p class="player--text">Громадянство:</p>
+                <p class="player__name">{{player.Citizenship}}</p>
+              </div>
+              <mat-form-field *ngIf="!edited" class="form__input">
+                <input matInput type="text" formControlName="Citizenship"
+                       placeholder="Громадянство:" value="{{player.Citizenship}}"/>
+              </mat-form-field>
+              <div *ngIf="edited" class="player__item">
+                <p class="player--text">Вік:</p>
+                <p class="player__name">{{player.Age}}р.</p>
+              </div>
+              <mat-form-field *ngIf="!edited" class="form__input">
+                <input placeholder="Дата народження:" formControlName="Birthday" matInput [matDatepicker]="picker3">
+                <mat-datepicker-toggle matSuffix [for]="picker3"></mat-datepicker-toggle>
+                <mat-datepicker #picker3></mat-datepicker>
+              </mat-form-field>
+              <div *ngIf="edited" class="player__item">
+                <p class="player--text">Клуб:</p>
+                <p class="player__name">{{player.Name_Club}}</p>
+              </div>
+              <mat-form-field *ngIf="!edited" class="form__input">
+                <input matInput type="text" disabled
+                       placeholder="Клуб:" value="{{player.Name_Club}}"/>
+              </mat-form-field>
+              <div *ngIf="edited" class="player__item">
+                <p class="player--text">Позиції:</p>
+                <p class="player__name">{{player.Position}}</p>
+              </div>
+              <mat-form-field  *ngIf="!edited" class="form__input">
+                <mat-select placeholder="Позиції" formControlName="Position" multiple>
+                  <mat-option value="Defender">Defender</mat-option>
+                  <mat-option value="Forward">Forward</mat-option>
+                  <mat-option value="Goalkeeper">Goalkeeper</mat-option>
+                  <mat-option value="Halfback">Halfback</mat-option>
+                </mat-select>
+              </mat-form-field>
+
+
+              <button mat-raised-button *ngIf="!edited" [disabled]="!changeForm.valid" class="save__button" disabled
+                      type="submit">
+                <p *ngIf="!loading">SAVE</p>
+                <img *ngIf="loading"
+                     src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA=="/>
+              </button>
+            </div>
+            <div class="form__user">
+              <div *ngIf="edited" class="player__item">
+                <p class="player--text">Ціна:</p>
+                <p class="player__name">{{player.Cost | currency}}</p>
+              </div>
+              <mat-form-field *ngIf="!edited" class="form__input">
+                <input matInput type="number" formControlName="Cost"
+                       placeholder="Ціна:" value="{{player.Cost}}"/>
+              </mat-form-field>
+              <div *ngIf="edited" class="player__item">
+                <p class="player--text">Зарплата:</p>
+                <p class="player__name">{{player.Salary | currency}}</p>
+              </div>
+              <mat-form-field *ngIf="!edited" class="form__input">
+                <input matInput type="number" formControlName="Salary"
+                       placeholder="Зарплата:" value="{{player.Salary}}"/>
+              </mat-form-field>
+              <div *ngIf="edited" class="player__item">
+                <p class="player--text">Досвід:</p>
+                <p class="player__name">{{player.Game_Experience}}р.</p>
+              </div>
+              <mat-form-field *ngIf="!edited" class="form__input">
+                <input matInput type="number" formControlName="Game_Experience"
+                       placeholder="Досвід:" value="{{player.Game_Experience}}"/>
+              </mat-form-field>
+              <div *ngIf="edited" class="player__item">
+                <p class="player--text">Зріст:</p>
+                <p class="player__name">{{player.Height}}см.</p>
+              </div>
+              <mat-form-field *ngIf="!edited" class="form__input">
+                <input matInput type="number" formControlName="Height"
+                       placeholder="Зріст:" value="{{player.Height}}"/>
+              </mat-form-field>
+              <div *ngIf="edited" class="player__item">
+                <p class="player--text">Вага:</p>
+                <p class="player__name">{{player.Weight}}кг</p>
+              </div>
+              <mat-form-field *ngIf="!edited" class="form__input">
+                <input matInput type="number" formControlName="Weight"
+                       placeholder="Вага:" value="{{player.Weight}}"/>
+              </mat-form-field>
+              <div *ngIf="edited" class="player__item">
+                <p class="player--text">Б'юча нога:</p>
+                <p class="player__name">{{player.Kicking_Leg}}</p>
+              </div>
+              <mat-form-field *ngIf="!edited" class="form__input">
+                <mat-select placeholder="Б'юча нога" formControlName="Kicking_Leg">
+                  <mat-option value="Права">Права</mat-option>
+                  <mat-option value="Ліва">Ліва</mat-option>
+                  <mat-option value="Дві">Дві</mat-option>
+                </mat-select>
+              </mat-form-field>
+              <div *ngIf="edited" class="player__item">
+                <p class="player--text">Агент:</p>
+                <p class="player__name">{{player.Agent}}</p>
+              </div>
+              <mat-form-field *ngIf="!edited" class="form__input">
+                <input matInput type="text" formControlName="Agent"
+                       placeholder="Агент:" value="{{player.Agent}}"/>
+              </mat-form-field>
+              <button *ngIf="!edited" class="cancel__button" mat-raised-button (click)="onCancel()" type="button">
+                CANCEL
+              </button>
+            </div>
+          </div>
+          <div class="edit_del">
+            <button *ngIf="edited && MEMBER" class="edit__button" mat-raised-button (click)="onEdit()" type="button">
+              EDIT PROFILE
+            </button>
+            <button *ngIf="edited && ADMIN" class="cancel__button" mat-raised-button (click)="openDialog()"
+                    type="button">DELETE PROFILE
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+    <!--    КЛУБИ І КОНТРАКТИ ГРАВЦЯ-->
+    <mat-expansion-panel (opened)="panelOpenState = true"
+                         (closed)="panelOpenState = false">
+      <mat-expansion-panel-header *ngIf="clubs[0].Active==1">
+        <div class="clubs">
+          <div class="club__heder">
+            <p class="club--text">Клуб:</p>
+            <p class="club__name">{{clubs[0].Name_Club}}</p>
+          </div>
+          <div class="club__info">
+            <p class="club--text">Контракт: </p>
+            <p class="club__name">{{clubs[0].Contract_Start | date}}</p>
+            <p class="club--text"> — </p>
+            <p class="club__name">{{clubs[0].Contract_End | date}}</p>
+          </div>
+        </div>
+      </mat-expansion-panel-header>
+      <mat-expansion-panel-header *ngIf="clubs[0].Active==null || clubs[0].Active==0">
+        <div class="clubs">
+          <div class="club__heder"><p class="club--text">Вільний агент</p></div>
+        </div>
+      </mat-expansion-panel-header>
+      <div class="clubs">
+        <div *ngIf="clubs[0].Active==null" class="club__heder"><p class="club--text">Цей гравець ще не грав у жодному
+          клубі</p></div>
+      </div>
+      <div *ngFor="let club of clubs">
+        <div class="clubs" *ngIf="club.Active==0">
+          <div class="club__heder">
+          <span class="material-icons">
+          label_outlined
+          </span>
+            <p class="club--text">Клуб:</p>
+            <p class="club__name">{{club.Name_Club}}</p>
+          </div>
+          <div class="club__info">
+            <p class="club--text">Контракт:</p>
+            <p class="club__name">{{club.Contract_Start | date}}</p>
+            <p class="club--text">—</p>
+            <p class="club__name">{{club.Contract_End | date}}</p>
+          </div>
+        </div>
+      </div>
+    </mat-expansion-panel>
+    <!--    СТАТИСТИКА-->
+    <div class="player__stats">
+      <p class="stats--header">СТАТИСТИКА</p>
+      <div class="stats--filters">
+        <div class="filter" *ngIf="player.Position == null ? false : player.Position[0].length > 1"><p
+          class="filter-header"></p>
+          <mat-form-field class="form__input">
+            <mat-select placeholder="Позиція" [(ngModel)]="selectedPosition" (ngModelChange)="onSelectPosition()">
+              <mat-option *ngFor="let pos of player.Position" [value]="pos">{{pos}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="filter" *ngIf="positionSelected && seasons.length!=0"><p class="filter-header"></p>
+          <mat-form-field class="form__input">
+            <mat-select placeholder="Сезон" [(ngModel)]="selectedSeason" (ngModelChange)="onSelectSeason()">
+              <mat-option *ngFor="let ses of seasons" [value]="ses.Season">{{ses.Season}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <p
+        *ngIf="(positionSelected || (player.Position == null ? false : player.Position[0].length == 1)) && seasons.length==0"
+        class="stats--header">статистика за обраними критеріями відсутня</p>
+      <table mat-table *ngIf="selectedSeason && selectedPosition=='Forward'" [dataSource]="dataSource"
+             class="mat-elevation-z8">
+        <ng-container matColumnDef="Number_Of_Matches">
+          <th mat-header-cell *matHeaderCellDef>Матчі</th>
+          <td mat-cell *matCellDef="let element"> {{element.Number_Of_Matches}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="Number_Yellow_Cards">
+          <th mat-header-cell *matHeaderCellDef>ЖК</th>
+          <td mat-cell *matCellDef="let element"> {{element.Number_Yellow_Cards}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="Number_Red_Cards">
+          <th mat-header-cell *matHeaderCellDef>ЧК</th>
+          <td mat-cell *matCellDef="let element"> {{element.Number_Red_Cards}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="Number_Play_Minutes">
+          <th mat-header-cell *matHeaderCellDef>Хвилин зіграно</th>
+          <td mat-cell *matCellDef="let element"> {{element.Number_Play_Minutes}} </td>
+        </ng-container>
+        <ng-container matColumnDef="Passes_Accuracy">
+          <th mat-header-cell *matHeaderCellDef>Пас, %</th>
+          <td mat-cell *matCellDef="let element"> {{element.Passes_Accuracy}} </td>
+        </ng-container>
+        <ng-container matColumnDef="Number_Interceptions_Match">
+          <th mat-header-cell *matHeaderCellDef>Відборів/Матч</th>
+          <td mat-cell *matCellDef="let element"> {{element.Number_Interceptions_Match}} </td>
+        </ng-container>
+        <ng-container matColumnDef="Goals">
+          <th mat-header-cell *matHeaderCellDef>Голи</th>
+          <td mat-cell *matCellDef="let element"> {{element.Goals}} </td>
+        </ng-container>
+        <ng-container matColumnDef="Assists">
+          <th mat-header-cell *matHeaderCellDef>Асисти</th>
+          <td mat-cell *matCellDef="let element"> {{element.Assists}} </td>
+        </ng-container>
+        <ng-container matColumnDef="Key_Pass">
+          <th mat-header-cell *matHeaderCellDef>Ключові паси</th>
+          <td mat-cell *matCellDef="let element"> {{element.Key_Pass}} </td>
+        </ng-container>
+        <ng-container matColumnDef="Hit_Match">
+          <th mat-header-cell *matHeaderCellDef>Удар/Матч</th>
+          <td mat-cell *matCellDef="let element"> {{element.Hit_Match}} </td>
+        </ng-container>
+        <ng-container matColumnDef="Goal_Match">
+          <th mat-header-cell *matHeaderCellDef>Гол/Матч</th>
+          <td mat-cell *matCellDef="let element"> {{element.Goal_Match | number}} </td>
+        </ng-container>
+        <ng-container matColumnDef="Hit_Goal">
+          <th mat-header-cell *matHeaderCellDef>Удар/Гол</th>
+          <td mat-cell *matCellDef="let element"> {{element.Hit_Goal | number}} </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumnsForward"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumnsForward;"></tr>
+      </table>
+      <table mat-table *ngIf="selectedSeason && selectedPosition=='Halfback'" [dataSource]="dataSource"
+             class="mat-elevation-z8">
+        <ng-container matColumnDef="Number_Of_Matches">
+          <th mat-header-cell *matHeaderCellDef>Матчі</th>
+          <td mat-cell *matCellDef="let element"> {{element.Number_Of_Matches}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="Number_Yellow_Cards">
+          <th mat-header-cell *matHeaderCellDef>ЖК</th>
+          <td mat-cell *matCellDef="let element"> {{element.Number_Yellow_Cards}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="Number_Red_Cards">
+          <th mat-header-cell *matHeaderCellDef>ЧК</th>
+          <td mat-cell *matCellDef="let element"> {{element.Number_Red_Cards}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="Number_Play_Minutes">
+          <th mat-header-cell *matHeaderCellDef>Хвилин зіграно</th>
+          <td mat-cell *matCellDef="let element"> {{element.Number_Play_Minutes}} </td>
+        </ng-container>
+        <ng-container matColumnDef="Passes_Accuracy">
+          <th mat-header-cell *matHeaderCellDef>Пас, %</th>
+          <td mat-cell *matCellDef="let element"> {{element.Passes_Accuracy}} </td>
+        </ng-container>
+        <ng-container matColumnDef="Number_Interceptions_Match">
+          <th mat-header-cell *matHeaderCellDef>Відборів/Матч</th>
+          <td mat-cell *matCellDef="let element"> {{element.Number_Interceptions_Match}} </td>
+        </ng-container>
+        <ng-container matColumnDef="Goals">
+          <th mat-header-cell *matHeaderCellDef>Голи</th>
+          <td mat-cell *matCellDef="let element"> {{element.Goals}} </td>
+        </ng-container>
+        <ng-container matColumnDef="Assists">
+          <th mat-header-cell *matHeaderCellDef>Асисти</th>
+          <td mat-cell *matCellDef="let element"> {{element.Assists}} </td>
+        </ng-container>
+        <ng-container matColumnDef="Key_Pass">
+          <th mat-header-cell *matHeaderCellDef>Ключові паси</th>
+          <td mat-cell *matCellDef="let element"> {{element.Key_Pass}} </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumnsHalfback"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumnsHalfback;"></tr>
+      </table>
+      <table mat-table *ngIf="selectedSeason && selectedPosition=='Defender'" [dataSource]="dataSource"
+             class="mat-elevation-z8">
+        <ng-container matColumnDef="Number_Of_Matches">
+          <th mat-header-cell *matHeaderCellDef>Матчі</th>
+          <td mat-cell *matCellDef="let element"> {{element.Number_Of_Matches}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="Number_Yellow_Cards">
+          <th mat-header-cell *matHeaderCellDef>ЖК</th>
+          <td mat-cell *matCellDef="let element"> {{element.Number_Yellow_Cards}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="Number_Red_Cards">
+          <th mat-header-cell *matHeaderCellDef>ЧК</th>
+          <td mat-cell *matCellDef="let element"> {{element.Number_Red_Cards}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="Number_Play_Minutes">
+          <th mat-header-cell *matHeaderCellDef>Хвилин зіграно</th>
+          <td mat-cell *matCellDef="let element"> {{element.Number_Play_Minutes}} </td>
+        </ng-container>
+        <ng-container matColumnDef="Passes_Accuracy">
+          <th mat-header-cell *matHeaderCellDef>Пас, %</th>
+          <td mat-cell *matCellDef="let element"> {{element.Passes_Accuracy}} </td>
+        </ng-container>
+        <ng-container matColumnDef="Number_Interceptions_Match">
+          <th mat-header-cell *matHeaderCellDef>Відборів/Матч</th>
+          <td mat-cell *matCellDef="let element"> {{element.Number_Interceptions_Match}} </td>
+        </ng-container>
+        <ng-container matColumnDef="Number_Selections_Match">
+          <th mat-header-cell *matHeaderCellDef>Виносів/Матч</th>
+          <td mat-cell *matCellDef="let element"> {{element.Number_Selections_Match}} </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumnsDefender"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumnsDefender;"></tr>
+      </table>
+      <table mat-table *ngIf="selectedSeason && selectedPosition=='Goalkeeper'" [dataSource]="dataSource"
+             class="mat-elevation-z8">
+        <ng-container matColumnDef="Number_Of_Matches">
+          <th mat-header-cell *matHeaderCellDef>Матчі</th>
+          <td mat-cell *matCellDef="let element"> {{element.Number_Of_Matches}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="Number_Yellow_Cards">
+          <th mat-header-cell *matHeaderCellDef>ЖК</th>
+          <td mat-cell *matCellDef="let element"> {{element.Number_Yellow_Cards}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="Number_Red_Cards">
+          <th mat-header-cell *matHeaderCellDef>ЧК</th>
+          <td mat-cell *matCellDef="let element"> {{element.Number_Red_Cards}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="Number_Play_Minutes">
+          <th mat-header-cell *matHeaderCellDef>Хвилин зіграно</th>
+          <td mat-cell *matCellDef="let element"> {{element.Number_Play_Minutes}} </td>
+        </ng-container>
+        <ng-container matColumnDef="Passes_Accuracy">
+          <th mat-header-cell *matHeaderCellDef>Пас, %</th>
+          <td mat-cell *matCellDef="let element"> {{element.Passes_Accuracy}} </td>
+        </ng-container>
+        <ng-container matColumnDef="Saves_Match">
+          <th mat-header-cell *matHeaderCellDef>Сейв/Матч</th>
+          <td mat-cell *matCellDef="let element"> {{element.Saves_Match}} </td>
+        </ng-container>
+        <ng-container matColumnDef="Missed_Goal_Match">
+          <th mat-header-cell *matHeaderCellDef>Пропущених м'ячів/Матч</th>
+          <td mat-cell *matCellDef="let element"> {{element.Missed_Goal_Match}} </td>
+        </ng-container>
+        <ng-container matColumnDef="Percentage_Served_Penalty">
+          <th mat-header-cell *matHeaderCellDef>Взятих пенальті, %</th>
+          <td mat-cell *matCellDef="let element"> {{element.Percentage_Served_Penalty}} </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumnsGoalkeeper"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumnsGoalkeeper;"></tr>
+      </table>
+
+    </div>
+  </div>
+</div>

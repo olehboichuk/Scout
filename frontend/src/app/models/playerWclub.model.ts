@@ -1,4 +1,4 @@
-export interface PlayerModel {
+export interface PlayerWclubModel {
   Number_Licenses: number;
   Name_Club: string;
   First_Name: string;
@@ -15,4 +15,5 @@ export interface PlayerModel {
   Weight: number;
   Kicking_Leg: string;
   Agent: string;
+  Position: string[];
 }

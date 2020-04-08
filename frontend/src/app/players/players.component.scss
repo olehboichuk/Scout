@@ -20,6 +20,7 @@ $background_color_7: #d6440c;
   cursor: pointer;
 }
 
+
 .deactivate {
   background-color: $background_color_7;
   font-family: $font_family_2;
@@ -33,7 +34,7 @@ $background_color_7: #d6440c;
   box-shadow: 0px 0px 30px rgba(153, 163, 174, 0.06);
   border-radius: 4px;
   margin: 62px 64px 0 148px;
-  height: 75vh;
+  height: 80vh;
   overflow-y: auto;
 }
 

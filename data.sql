@@ -1,4 +1,4 @@
-CREATE SCHEMA IF NOT EXISTS scout;
+CREATE SCHEMA IF NOT EXISTS scssout;
 
 DROP TABLE IF EXISTS CLUB CASCADE;
 DROP TABLE IF EXISTS PHONES CASCADE;
@@ -25,7 +25,7 @@ CREATE TABLE USERS
     Password   TEXT   NOT NULL,
     First_name TEXT   NULL,
     Last_name  TEXT   NULL,
-    Role       TEXT   NOT NULL UNIQUE,
+    Role       TEXT   NOT NULL,
     PRIMARY KEY (Id)
 );
 
@@ -113,8 +113,11 @@ CREATE TABLE PLAYER_CONTRACT
     Number_Licenses CHAR(17)    NOT NULL,
     Contract_Start  DATE        NOT NULL,
     Contract_End    DATE        NOT NULL,
-    Active          BOOLEAN     NOT NULL,
-    PRIMARY KEY (Name_Club, Number_Licenses),
+    Active          BOOLEAN AS (IF(STR_TO_DATE(CONCAT(YEAR(CURDATE()), '-', MONTH(CURDATE()), '-', DAY(CURDATE())),
+                                               '%Y-%c-%e') < STR_TO_DATE(
+                                           CONCAT(YEAR(Contract_End), '-', MONTH(Contract_End), '-', DAY(Contract_End)),
+                                           '%Y-%c-%e'), 1, 0)),
+    PRIMARY KEY (Name_Club, Number_Licenses, Contract_Start),
     FOREIGN KEY (Name_Club) REFERENCES CLUB (Name_Club) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (Number_Licenses) REFERENCES PLAYER (Number_Licenses) ON DELETE NO ACTION ON UPDATE CASCADE
 );
@@ -123,7 +126,7 @@ CREATE TABLE ROLE
 (
     Position        VARCHAR(25) NOT NULL,
     Number_Licenses CHAR(17)    NOT NULL,
-    PRIMARY KEY (Position),
+    PRIMARY KEY (Position, Number_Licenses),
     FOREIGN KEY (Number_Licenses) REFERENCES PLAYER (Number_Licenses) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
@@ -139,73 +142,85 @@ CREATE TABLE INDIVIDUAL_TROPHY
 CREATE TABLE STATISTICS_SEASON_GOALKEEPER
 (
     Season                    CHAR(17) NOT NULL,
+    Number_Licenses           CHAR(17) NOT NULL,
+    Number_Of_Matches         SMALLINT NOT NULL,
     Number_Yellow_Cards       SMALLINT NOT NULL,
+    Number_Red_Cards          SMALLINT NOT NULL,
     Number_Play_Minutes       SMALLINT NOT NULL,
     Passes_Accuracy           SMALLINT NOT NULL,
-    Number_Licenses           CHAR(17) NOT NULL,
     Saves_Match               FLOAT    NOT NULL,
     Missed_Goal_Match         FLOAT    NOT NULL,
     Percentage_Served_Penalty FLOAT    NOT NULL,
-    PRIMARY KEY (Season),
+    PRIMARY KEY (Season, Number_Licenses),
     FOREIGN KEY (Number_Licenses) REFERENCES PLAYER (Number_Licenses) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE STATISTICS_SEASON_DEFENDERS
 (
     Season                     CHAR(17) NOT NULL,
+    Number_Licenses            CHAR(17) NOT NULL,
+    Number_Of_Matches          SMALLINT NOT NULL,
     Number_Yellow_Cards        SMALLINT NOT NULL,
+    Number_Red_Cards           SMALLINT NOT NULL,
     Number_Play_Minutes        SMALLINT NOT NULL,
     Passes_Accuracy            SMALLINT NOT NULL,
-    Number_Licenses            CHAR(17) NOT NULL,
     Number_Selections_Match    FLOAT    NOT NULL,
     Number_Takeaways_Match     FLOAT    NOT NULL,
     Number_Interceptions_Match FLOAT    NOT NULL,
-    PRIMARY KEY (Season),
+    PRIMARY KEY (Season, Number_Licenses),
     FOREIGN KEY (Number_Licenses) REFERENCES PLAYER (Number_Licenses) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE STATISTICS_SEASON_HALFBACKS
 (
     Season                     CHAR(17) NOT NULL,
+    Number_Licenses            CHAR(17) NOT NULL,
+    Number_Of_Matches          SMALLINT NOT NULL,
     Number_Yellow_Cards        SMALLINT NOT NULL,
+    Number_Red_Cards           SMALLINT NOT NULL,
     Number_Play_Minutes        SMALLINT NOT NULL,
     Passes_Accuracy            SMALLINT NOT NULL,
-    Number_Licenses            CHAR(17) NOT NULL,
     Number_Interceptions_Match FLOAT    NOT NULL,
     Goals                      SMALLINT NOT NULL,
     Assists                    SMALLINT NOT NULL,
     Key_Pass                   SMALLINT NOT NULL,
-    PRIMARY KEY (Season),
+    Hit_Match                  FLOAT    NOT NULL,
+    Goal_Match                 FLOAT AS (if((Goals / Number_Of_Matches), Goals / Number_Of_Matches, 0)),
+    Hit_Goal                   FLOAT AS (if((Hit_Match / Goals), Hit_Match / Goals, 0)),
+    PRIMARY KEY (Season, Number_Licenses),
     FOREIGN KEY (Number_Licenses) REFERENCES PLAYER (Number_Licenses) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE STATISTICS_SEASON_FORWARD
 (
     Season              CHAR(17) NOT NULL,
+    Number_Licenses     CHAR(17) NOT NULL,
+    Number_Of_Matches   SMALLINT NOT NULL,
     Number_Yellow_Cards SMALLINT NOT NULL,
+    Number_Red_Cards    SMALLINT NOT NULL,
     Number_Play_Minutes SMALLINT NOT NULL,
     Passes_Accuracy     SMALLINT NOT NULL,
-    Number_Licenses     CHAR(17) NOT NULL,
     Goals               SMALLINT NOT NULL,
     Assists             SMALLINT NOT NULL,
     Key_Pass            SMALLINT NOT NULL,
     Hit_Match           FLOAT    NOT NULL,
-    PRIMARY KEY (Season),
+    Goal_Match          FLOAT AS (if((Goals / Number_Of_Matches), Goals / Number_Of_Matches, 0)),
+    Hit_Goal            FLOAT AS (if((Hit_Match / Goals), Hit_Match / Goals, 0)),
+    PRIMARY KEY (Season, Number_Licenses),
     FOREIGN KEY (Number_Licenses) REFERENCES PLAYER (Number_Licenses) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE FOOTBALL_MATCH
 (
     Season          CHAR(17)    NOT NULL,
-    Name_Match      CHAR(50)    NOT NULL,
-    Date_Match      DATE        NOT NULL,
     Number_Licenses CHAR(17)    NOT NULL,
-    Score           VARCHAR(20) NOT NULL,
+    Date_Match      DATE        NOT NULL,
     Host_Team       VARCHAR(25) NOT NULL,
     Guest_Team      VARCHAR(25) NOT NULL,
-    PRIMARY KEY (Name_Match, Date_Match),
-    FOREIGN KEY (Number_Licenses) REFERENCES STATISTICS_SEASON_FORWARD (Number_Licenses) ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY (Number_Licenses) REFERENCES STATISTICS_SEASON_HALFBACKS (Number_Licenses) ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY (Number_Licenses) REFERENCES STATISTICS_SEASON_DEFENDERS (Number_Licenses) ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY (Number_Licenses) REFERENCES STATISTICS_SEASON_GOALKEEPER (Number_Licenses) ON DELETE CASCADE ON UPDATE CASCADE
+    Score           VARCHAR(20) NOT NULL,
+    PRIMARY KEY (Date_Match),
+    FOREIGN KEY (Number_Licenses, Season) REFERENCES STATISTICS_SEASON_FORWARD (Number_Licenses, Season) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (Number_Licenses, Season) REFERENCES STATISTICS_SEASON_HALFBACKS (Number_Licenses, Season) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (Number_Licenses, Season) REFERENCES STATISTICS_SEASON_DEFENDERS (Number_Licenses, Season) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (Number_Licenses, Season) REFERENCES STATISTICS_SEASON_GOALKEEPER (Number_Licenses, Season) ON DELETE CASCADE ON UPDATE CASCADE
 );

@@ -1,7 +1,10 @@
 <mat-toolbar class="bar">
+  <p *ngIf="_authService.isLoggedIn()" class="bar__item">{{_authService.getRole()}}</p>
   <span class="filler"></span>
+  <button *ngIf="_authService.isLoggedIn()" class="bar__item" mat-button routerLink="/clubs">ТУРНІРИ</button>
   <button *ngIf="_authService.isLoggedIn()" class="bar__item" mat-button routerLink="/clubs">КЛУБИ</button>
   <button *ngIf="_authService.isLoggedIn()" class="bar__item" mat-button routerLink="/players">ГРАВЦІ</button>
   <button *ngIf="!_authService.isLoggedIn()" class="bar__item" mat-button routerLink="/login">УВІЙТИ</button>
+  <button *ngIf="!_authService.isLoggedIn()" class="bar__item" mat-button routerLink="/sign-up">РЕЄСТРАЦІЯ</button>
   <button *ngIf="_authService.isLoggedIn()" class="bar__item" mat-button (click)="_authService.logout()">ВИЙТИ</button>
 </mat-toolbar>
