@@ -58,7 +58,7 @@
                 <p class="player__name">{{tournament.Winner}}</p>
               </div>
               <mat-form-field class="form__input" *ngIf="!edited">
-                <mat-select placeholder="Переможець" formControlName="Winner">
+                <mat-select placeholder="Переможець:" disabled formControlName="Winner">
                   <mat-option>None</mat-option>
                   <mat-option *ngFor=" let club of clubNames" value="{{club.Name_Club}}">{{club.Name_Club}}</mat-option>
                 </mat-select>
@@ -100,7 +100,7 @@
       </div>
     </form>
     <table style="width: 100%;" mat-table [dataSource]="dataSource" class="mat-elevation-z8"
-           *ngIf="clubNames.length > 0 && !loading">
+           *ngIf="!loading && clubNames.length > 0">
 
       <!-- Position Column -->
       <ng-container matColumnDef="Name_Club">
@@ -138,7 +138,8 @@
       <p class="info-text mat-body-2" *ngIf="clubNames.length <= 0">Клуби відсутні</p>
       <mat-paginator class="paginator" [pageSize]="10" [pageSizeOptions]="[5, 10, 20]"></mat-paginator>
       <p class="info-text mat-body-2" *ngIf="loading">Loading...</p>
-      <button *ngIf="(ADMIN || MEMBER)&&!addingClub" mat-button class="save__button" (click)="addClub()">ДОДАТИ КЛУБ
+      <button *ngIf="(ADMIN || MEMBER)&&!addingClub&&(clubNames.length < tournament.Number_Of_Teams)" mat-button
+              class="save__button" (click)="addClub()">ДОДАТИ КЛУБ
       </button>
     </div>
     <form style="width: 100%; display: flex; justify-content: space-around;" (ngSubmit)="onSubmitAdd()"
@@ -155,7 +156,7 @@
       <button mat-raised-button [disabled]="!addClubForm.valid" class="save__button" disabled
               type="submit">SAVE
       </button>
-      <button class="cancel__button" mat-raised-button (click)="onCancel()" type="button">
+      <button class="cancel__button" mat-raised-button (click)="onCancelClub()" type="button">
         CANCEL
       </button>
     </form>
