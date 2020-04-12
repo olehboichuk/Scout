@@ -22,6 +22,7 @@ export class TournamentComponent implements OnInit {
   private edited = true;
   private tournament_Name: string;
   private tournament_Season: string;
+  private clubNames: any;
 
   constructor(private formBuilder: FormBuilder, public dialog: MatDialog, private authService: AuthService, public route: ActivatedRoute, private router: Router) {
   }
@@ -54,6 +55,12 @@ export class TournamentComponent implements OnInit {
         this.loading = false;
       })
     });
+    this.authService.getTournamentClubs({
+      Tournament_Name: this.tournament_Name,
+      Season: this.tournament_Season
+    }).subscribe(res => {
+      this.clubNames = res;
+    });
   }
 
   onEdit() {
@@ -84,10 +91,11 @@ export class TournamentComponent implements OnInit {
       Season: this.changeForm.get('Season').value,
       Number_Of_Teams: this.changeForm.get('Number_Of_Teams').value,
       Area: this.changeForm.get('Area').value,
-      Winner: this.changeForm.get('Winner').value,
-      Team_Up_League: this.changeForm.get('Team_Up_League').value,
-      Team_Down_League: this.changeForm.get('Team_Down_League').value,
+      Winner: this.changeForm.get('Winner').value ? this.changeForm.get('Winner').value : '',
+      Team_Up_League: this.changeForm.get('Team_Up_League').value ? this.changeForm.get('Team_Up_League').value : '',
+      Team_Down_League: this.changeForm.get('Team_Down_League').value ? this.changeForm.get('Team_Down_League').value : '',
     };
+    console.log(tournament);
     this.loading = true;
     this.authService.updateTournament(tournament, this.tournament.Name_Tournament, this.tournament.Season).subscribe(res => {
       if (this.tournament.Name_Tournament != this.changeForm.get('Name_Tournament').value || this.tournament.Season != this.changeForm.get('Season').value) {

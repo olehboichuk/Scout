@@ -51,5 +51,13 @@ router.route('/tournament/:name/:season')
         });
     });
 
+router.route('/tournament/clubs')
+    .post((req, res) => {
+        db.query(sql.getTournamentClubs, [req.body.Season,req.body.Tournament_Name], (err, result) => {
+            if (err) throw err;
+            res.send(result);
+        });
+    });
+
 
 module.exports = router;

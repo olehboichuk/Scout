@@ -45,6 +45,7 @@ export class AuthService {
   private deleteStatsDefenderURL = 'http://localhost:3000/api/player/stats/defender/delete';
   private deleteStatsGoalkeeperURL = 'http://localhost:3000/api/player/stats/goalkeeper/delete';
   private tournamentsURL = 'http://localhost:3000/api/tournament';
+  private tournamentClubsURL = 'http://localhost:3000/api/tournament/clubs';
 
 
   constructor(private http: HttpClient, private router: Router) {
@@ -225,5 +226,9 @@ export class AuthService {
 
   deleteTournament(Name_Tournament: string, Season: string) {
     return this.http.delete(this.tournamentsURL + '/' + Name_Tournament + '/' + Season);
+  }
+
+  getTournamentClubs(tour: { Tournament_Name: string, Season: string }) {
+    return this.http.post(this.tournamentClubsURL, tour);
   }
 }

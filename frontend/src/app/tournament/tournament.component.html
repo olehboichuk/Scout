@@ -53,25 +53,31 @@
                 <p class="player--text">Переможець:</p>
                 <p class="player__name">{{tournament.Winner}}</p>
               </div>
-              <mat-form-field *ngIf="!edited" class="form__input">
-                <input matInput type="text" formControlName="Winner"
-                       placeholder="Переможець:"/>
+              <mat-form-field class="form__input" *ngIf="!edited">
+                <mat-select placeholder="Переможець" formControlName="Winner">
+                  <mat-option>None</mat-option>
+                  <mat-option *ngFor=" let club of clubNames" value="{{club.Name_Club}}">{{club.Name_Club}}</mat-option>
+                </mat-select>
               </mat-form-field>
               <div *ngIf="edited" class="player__item">
                 <p class="player--text">Команда піднявшась:</p>
                 <p class="player__name">{{tournament.Team_Up_League}}</p>
               </div>
-              <mat-form-field *ngIf="!edited" class="form__input">
-                <input matInput type="text" formControlName="Team_Up_League"
-                       placeholder="Команда піднявшась:" />
+              <mat-form-field class="form__input" *ngIf="!edited">
+              <mat-select placeholder="Команда піднявшась:" formControlName="Team_Up_League">
+                <mat-option>None</mat-option>
+                <mat-option *ngFor=" let club of clubNames" value="{{club.Name_Club}}">{{club.Name_Club}}</mat-option>
+              </mat-select>
               </mat-form-field>
               <div *ngIf="edited" class="player__item">
                 <p class="player--text">Команда вилетівша:</p>
                 <p class="player__name">{{tournament.Team_Down_League}}</p>
               </div>
-              <mat-form-field *ngIf="!edited" class="form__input">
-                <input matInput type="text"  formControlName="Team_Down_League"
-                       placeholder="Команда вилетівша:" />
+              <mat-form-field class="form__input" *ngIf="!edited">
+                <mat-select placeholder="Команда вилетівша:" formControlName="Team_Down_League">
+                  <mat-option>None</mat-option>
+                  <mat-option *ngFor=" let club of clubNames" value="{{club.Name_Club}}">{{club.Name_Club}}</mat-option>
+                </mat-select>
               </mat-form-field>
               <button *ngIf="!edited" class="cancel__button" mat-raised-button (click)="onCancel()" type="button">
                 CANCEL

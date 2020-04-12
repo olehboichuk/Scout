@@ -49,6 +49,7 @@ let deleteClubById = 'DELETE FROM club WHERE Name_Club=?';
 //CRUD Tournament
 let createTournament = 'INSERT INTO tournament SET ?';
 let getAllTournaments = 'SELECT * FROM tournament';
+let getTournamentClubs = 'SELECT c.Name_Club FROM club c INNER JOIN club_tournament ct on c.Name_Club = ct.Name_Club INNER JOIN tournament t on ct.Name_Tournament = t.Name_Tournament AND ct.Season = t.Season WHERE t.Season=? AND t.Name_Tournament=?';
 let getTournamentById = 'SELECT * FROM tournament WHERE Name_Tournament=? AND Season=?';
 let updateTournamentById = 'UPDATE tournament SET ? WHERE Name_Tournament=? AND Season=?';
 let deleteTournamentById = 'DELETE FROM tournament WHERE Name_Tournament=? AND Season=?';
@@ -70,7 +71,7 @@ let getGoalkeeperStatics = 'SELECT * FROM statistics_season_goalkeeper WHERE Num
 
 let filterOn = 'SELECT MAX(Cost) AS Coast_Max, MAX(Age) AS Age_Max, MIN(Age) AS Age_Min FROM player';
 
-module.exports = {
+module.exports = {getTournamentClubs,
     filterOn,
     getAllPlayersFilter,
     updateGoalkeeperStats,
