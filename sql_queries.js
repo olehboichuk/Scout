@@ -28,9 +28,9 @@ let getForwardSeasons = 'SELECT Season FROM statistics_season_forward WHERE Numb
 
 //CRUD Player
 let createPlayer = 'INSERT INTO player SET ?';
-let getAllPlayers = 'SELECT p.Number_Licenses, p.First_Name, p.Surname, p.Patronymic, p.Citizenship, p.Update_Date, p.Birthday, p.Age, p.Cost, p.Salary, p.Game_Experience, p.Height, p.Weight, p.Kicking_Leg, p.Agent_Name, p.Agent_Phone, (SELECT Name_Club FROM player_contract pc WHERE p.Number_Licenses=pc.Number_Licenses AND pc.Active=1) AS Name_Club, r.Position FROM player p INNER JOIN role r on p.Number_Licenses = r.Number_Licenses';
-let getAllPlayersFilter = 'SELECT p.Number_Licenses, p.First_Name, p.Surname, p.Patronymic, p.Citizenship, p.Update_Date, p.Birthday, p.Age, p.Cost, p.Salary, p.Game_Experience, p.Height, p.Weight, p.Kicking_Leg, p.Agent_Name, p.Agent_Phone, (SELECT Name_Club FROM player_contract pc WHERE p.Number_Licenses=pc.Number_Licenses AND pc.Active=1) AS Name_Club, r.Position FROM player p INNER JOIN role r on p.Number_Licenses = r.Number_Licenses WHERE p.Cost<=? AND p.Cost>=? AND p.Age<=? AND p.Age>=? AND ((? IS NOT NULL AND p.Kicking_Leg LIKE ?) OR ? IS NULL) AND ((? IS NOT NULL AND r.Position LIKE ?) OR ? IS NULL)';
-let getPlayerById = 'SELECT p.Number_Licenses, p.First_Name, p.Surname, p.Patronymic, p.Citizenship, p.Update_Date, p.Birthday, p.Age, p.Cost, p.Salary, p.Game_Experience, p.Height, p.Weight, p.Kicking_Leg, p.Agent_Name, p.Agent_Phone, (SELECT Name_Club FROM player_contract pc WHERE p.Number_Licenses=pc.Number_Licenses AND pc.Active=1) AS Name_Club, r.Position FROM player p INNER JOIN role r on p.Number_Licenses = r.Number_Licenses WHERE  p.Number_Licenses=?';
+let getAllPlayers = 'SELECT p.Number_Licenses, p.First_Name, p.Surname, p.Patronymic, p.Citizenship, p.Update_Date, p.Birthday, p.Age, p.Cost, p.Salary, p.Game_Experience, p.Height, p.Weight, p.Kicking_Leg, p.Agent_Name, p.Agent_Phone, (SELECT Name_Club FROM player_contract pc WHERE p.Number_Licenses=pc.Number_Licenses AND pc.Active=1) AS Name_Club, r.Position FROM player p LEFT JOIN role r on p.Number_Licenses = r.Number_Licenses';
+let getAllPlayersFilter = 'SELECT p.Number_Licenses, p.First_Name, p.Surname, p.Patronymic, p.Citizenship, p.Update_Date, p.Birthday, p.Age, p.Cost, p.Salary, p.Game_Experience, p.Height, p.Weight, p.Kicking_Leg, p.Agent_Name, p.Agent_Phone, (SELECT Name_Club FROM player_contract pc WHERE p.Number_Licenses=pc.Number_Licenses AND pc.Active=1) AS Name_Club, r.Position FROM player p LEFT JOIN role r on p.Number_Licenses = r.Number_Licenses WHERE p.Cost<=? AND p.Cost>=? AND p.Age<=? AND p.Age>=? AND ((? IS NOT NULL AND p.Kicking_Leg LIKE ?) OR ? IS NULL) AND ((? IS NOT NULL AND r.Position LIKE ?) OR ? IS NULL)';
+let getPlayerById = 'SELECT p.Number_Licenses, p.First_Name, p.Surname, p.Patronymic, p.Citizenship, p.Update_Date, p.Birthday, p.Age, p.Cost, p.Salary, p.Game_Experience, p.Height, p.Weight, p.Kicking_Leg, p.Agent_Name, p.Agent_Phone, (SELECT Name_Club FROM player_contract pc WHERE p.Number_Licenses=pc.Number_Licenses AND pc.Active=1) AS Name_Club, r.Position FROM player p LEFT JOIN role r on p.Number_Licenses = r.Number_Licenses WHERE  p.Number_Licenses=?';
 let updatePlayerById = 'UPDATE player SET ? WHERE Number_Licenses=?';
 let deletePlayerById = 'DELETE FROM player WHERE Number_Licenses=?';
 
@@ -70,14 +70,35 @@ let getGoalkeeperStatics = 'SELECT * FROM statistics_season_goalkeeper WHERE Num
 
 let filterOn = 'SELECT MAX(Cost) AS Coast_Max, MAX(Age) AS Age_Max, MIN(Age) AS Age_Min FROM player';
 
-module.exports = {filterOn,getAllPlayersFilter,
-    updateGoalkeeperStats, updateDefenderStats, updateHalfbackStats, updateForwardStats,
-    deleteGoalkeeperStats, deleteDefenderStats, deleteHalfbackStats, deleteForwardStats,
-    addGoalkeeperStats, addDefenderStats, addHalfbackStats, addForwardStats,
-    createContract, updateContract, deleteContract,
-    getAllClubsNames, deletePlayerPositionsById, updatePlayerPositionsById,
-    getForwardStatsBySeason, getHalfbackStatsBySeason, getDefenderStatsBySeason, getGoalkeeperStatsBySeason,
-    getGoalkeeperSeasons, getForwardSeasons, getHalfbackSeasons, getDefenderSeasons,
+module.exports = {
+    filterOn,
+    getAllPlayersFilter,
+    updateGoalkeeperStats,
+    updateDefenderStats,
+    updateHalfbackStats,
+    updateForwardStats,
+    deleteGoalkeeperStats,
+    deleteDefenderStats,
+    deleteHalfbackStats,
+    deleteForwardStats,
+    addGoalkeeperStats,
+    addDefenderStats,
+    addHalfbackStats,
+    addForwardStats,
+    createContract,
+    updateContract,
+    deleteContract,
+    getAllClubsNames,
+    deletePlayerPositionsById,
+    updatePlayerPositionsById,
+    getForwardStatsBySeason,
+    getHalfbackStatsBySeason,
+    getDefenderStatsBySeason,
+    getGoalkeeperStatsBySeason,
+    getGoalkeeperSeasons,
+    getForwardSeasons,
+    getHalfbackSeasons,
+    getDefenderSeasons,
     getPlayerPositions,
     getDefenderStatics,
     getForwardStatics,

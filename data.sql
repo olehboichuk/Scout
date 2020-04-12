@@ -58,31 +58,26 @@ CREATE TABLE TEAM_TROPHY
 CREATE TABLE TOURNAMENT
 (
     Name_Tournament  VARCHAR(25) NOT NULL,
+    Season           CHAR(17)    NOT NULL,
     Number_Of_Teams  SMALLINT(3) NOT NULL,
     Area             VARCHAR(20) NOT NULL,
     Winner           VARCHAR(25) NULL,
     Team_Up_League   VARCHAR(25) NULL,
     Team_Down_League VARCHAR(25) NULL,
-    PRIMARY KEY (Name_Tournament)
+    PRIMARY KEY (Name_Tournament,Season)
 );
 
 CREATE TABLE CLUB_TOURNAMENT
 (
     Name_Club           VARCHAR(25) NOT NULL,
+    Season              CHAR(17)    NOT NULL,
     Name_Tournament     VARCHAR(25) NOT NULL,
     Place_On_Tournament SMALLINT(3) NOT NULL,
     PRIMARY KEY (Name_Club, Name_Tournament),
     FOREIGN KEY (Name_Club) REFERENCES CLUB (Name_Club) ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY (Name_Tournament) REFERENCES TOURNAMENT (Name_Tournament) ON DELETE CASCADE ON UPDATE CASCADE
+    FOREIGN KEY (Name_Tournament,Season) REFERENCES TOURNAMENT (Name_Tournament,Season) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-CREATE TABLE LEAGUE_MEMBERS
-(
-    Name_League     VARCHAR(25) NOT NULL,
-    Name_Tournament VARCHAR(25) NOT NULL,
-    PRIMARY KEY (Name_League),
-    FOREIGN KEY (Name_Tournament) REFERENCES TOURNAMENT (Name_Tournament) ON DELETE CASCADE ON UPDATE CASCADE
-);
 
 CREATE TABLE PLAYER
 (
@@ -104,7 +99,7 @@ CREATE TABLE PLAYER
     Weight          FLOAT       NOT NULL,
     Kicking_Leg     VARCHAR(15) NOT NULL,
     Agent_Name      VARCHAR(25) NULL,
-    Agent_Phone     CHAR(13) NULL,
+    Agent_Phone     CHAR(13)    NULL,
     PRIMARY KEY (Number_Licenses)
 );
 
@@ -213,19 +208,4 @@ CREATE TABLE STATISTICS_SEASON_FORWARD
     Hit_Goal            FLOAT AS (if((Hit_Match / Goals), Hit_Match / Goals, 0)),
     PRIMARY KEY (Season, Number_Licenses),
     FOREIGN KEY (Number_Licenses) REFERENCES PLAYER (Number_Licenses) ON DELETE CASCADE ON UPDATE CASCADE
-);
-
-CREATE TABLE FOOTBALL_MATCH
-(
-    Season          CHAR(17)    NOT NULL,
-    Number_Licenses CHAR(17)    NOT NULL,
-    Date_Match      DATE        NOT NULL,
-    Host_Team       VARCHAR(25) NOT NULL,
-    Guest_Team      VARCHAR(25) NOT NULL,
-    Score           VARCHAR(20) NOT NULL,
-    PRIMARY KEY (Date_Match),
-    FOREIGN KEY (Number_Licenses, Season) REFERENCES STATISTICS_SEASON_FORWARD (Number_Licenses, Season) ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY (Number_Licenses, Season) REFERENCES STATISTICS_SEASON_HALFBACKS (Number_Licenses, Season) ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY (Number_Licenses, Season) REFERENCES STATISTICS_SEASON_DEFENDERS (Number_Licenses, Season) ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY (Number_Licenses, Season) REFERENCES STATISTICS_SEASON_GOALKEEPER (Number_Licenses, Season) ON DELETE CASCADE ON UPDATE CASCADE
 );
