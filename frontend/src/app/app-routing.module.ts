@@ -14,7 +14,7 @@ import {TournamentsComponent} from "./tournaments/tournaments.component";
 
 
 const routes: Routes = [
-  {path: '', component: PlayersComponent},
+  {path: '', component: LoginComponent},
   {path: 'login', component: LoginComponent},
   {path: 'sign-up', component: SignUpComponent},
   {path: 'players', component: PlayersComponent},
