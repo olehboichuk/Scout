@@ -13,5 +13,6 @@ export interface FullPlayerModel {
   Height: number;
   Weight: number;
   Kicking_Leg: string;
-  Agent: string;
+  Agent_Name: string;
+  Agent_Phone: string;
 }

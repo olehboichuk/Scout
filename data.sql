@@ -1,4 +1,4 @@
-CREATE SCHEMA IF NOT EXISTS scssout;
+CREATE SCHEMA IF NOT EXISTS scout;
 
 DROP TABLE IF EXISTS CLUB CASCADE;
 DROP TABLE IF EXISTS PHONES CASCADE;
@@ -103,7 +103,8 @@ CREATE TABLE PLAYER
     Height          FLOAT       NOT NULL,
     Weight          FLOAT       NOT NULL,
     Kicking_Leg     VARCHAR(15) NOT NULL,
-    Agent           VARCHAR(15) NULL,
+    Agent_Name      VARCHAR(25) NULL,
+    Agent_Phone     CHAR(13) NULL,
     PRIMARY KEY (Number_Licenses)
 );
 
@@ -116,10 +117,15 @@ CREATE TABLE PLAYER_CONTRACT
     Active          BOOLEAN AS (IF(STR_TO_DATE(CONCAT(YEAR(CURDATE()), '-', MONTH(CURDATE()), '-', DAY(CURDATE())),
                                                '%Y-%c-%e') < STR_TO_DATE(
                                            CONCAT(YEAR(Contract_End), '-', MONTH(Contract_End), '-', DAY(Contract_End)),
-                                           '%Y-%c-%e'), 1, 0)),
+                                           '%Y-%c-%e') AND
+                                   (STR_TO_DATE(CONCAT(YEAR(CURDATE()), '-', MONTH(CURDATE()), '-', DAY(CURDATE())),
+                                                '%Y-%c-%e') > STR_TO_DATE(
+                                            CONCAT(YEAR(Contract_Start), '-', MONTH(Contract_Start), '-',
+                                                   DAY(Contract_Start)),
+                                            '%Y-%c-%e')), 1, 0)),
     PRIMARY KEY (Name_Club, Number_Licenses, Contract_Start),
     FOREIGN KEY (Name_Club) REFERENCES CLUB (Name_Club) ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY (Number_Licenses) REFERENCES PLAYER (Number_Licenses) ON DELETE NO ACTION ON UPDATE CASCADE
+    FOREIGN KEY (Number_Licenses) REFERENCES PLAYER (Number_Licenses) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE ROLE
@@ -165,7 +171,6 @@ CREATE TABLE STATISTICS_SEASON_DEFENDERS
     Number_Play_Minutes        SMALLINT NOT NULL,
     Passes_Accuracy            SMALLINT NOT NULL,
     Number_Selections_Match    FLOAT    NOT NULL,
-    Number_Takeaways_Match     FLOAT    NOT NULL,
     Number_Interceptions_Match FLOAT    NOT NULL,
     PRIMARY KEY (Season, Number_Licenses),
     FOREIGN KEY (Number_Licenses) REFERENCES PLAYER (Number_Licenses) ON DELETE CASCADE ON UPDATE CASCADE

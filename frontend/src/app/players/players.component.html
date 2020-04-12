@@ -1,6 +1,36 @@
 <main>
-  <div class="content">
-    <mat-spinner *ngIf="loading"></mat-spinner>
+  <mat-spinner *ngIf="loading"></mat-spinner>
+  <div class="content" *ngIf="!loading">
+    <form (ngSubmit)="onFilter()" [formGroup]="filterForm" class="filters">
+      <div class="sliders">
+      <ng5-slider style="margin-right: 5px;" [(value)]="minValue" [(highValue)]="maxValue" [options]="options"></ng5-slider>
+      <ng5-slider style="margin-left: 5px;" [(value)]="minValueAge" [(highValue)]="maxValueAge" [options]="optionsAge"></ng5-slider>
+      </div>
+      <div class="selectors">
+        <mat-form-field  class="form__input">
+        <mat-select placeholder="Б'юча нога" formControlName="Kicking_Leg">
+          <mat-option>None</mat-option>
+          <mat-option value="Права">Права</mat-option>
+          <mat-option value="Ліва">Ліва</mat-option>
+          <mat-option value="Дві">Дві</mat-option>
+        </mat-select>
+      </mat-form-field>
+        <mat-form-field class="form__input">
+          <mat-select placeholder="Позиції" formControlName="Positions">
+            <mat-option>None</mat-option>
+            <mat-option value="Defender">Defender</mat-option>
+            <mat-option value="Forward">Forward</mat-option>
+            <mat-option value="Goalkeeper">Goalkeeper</mat-option>
+            <mat-option value="Halfback">Halfback</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <button mat-raised-button [disabled]="!filterForm.valid" style="background-color: #0f89ff" class="save__button" disabled
+                type="submit">ВІДФІЛЬТРУВАТИ
+        </button>
+      </div>
+
+    </form>
+
     <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" *ngIf="users.length > 0 && !loading">
 
       <!-- Position Column -->
@@ -20,7 +50,7 @@
       <!-- Name Column -->
       <ng-container matColumnDef="Name_Club">
         <th mat-header-cell *matHeaderCellDef> Клуб</th>
-        <td mat-cell *matCellDef="let element"> {{element.Name_Club ? element.Name_Club : 'Вільний агент'}}  </td>
+        <td class="complaints__count"  mat-cell *matCellDef="let element" [routerLink]="[element.Name_Club ? '/club/'+element.Name_Club : '/clubs']"> {{element.Name_Club ? element.Name_Club : 'Вільний агент'}}  </td>
       </ng-container>
 
       <!-- Weight Column -->
@@ -47,9 +77,12 @@
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     </table>
-    <mat-paginator [pageSize]="10" [pageSizeOptions]="[5, 10, 20]"></mat-paginator>
-    <p class="info-text mat-body-2" *ngIf="users.length <= 0">Гравці відсутні</p>
-    <p class="info-text mat-body-2" *ngIf="loading">Loading...</p>
-
+    <div class="footer">
+      <button *ngIf="ADMIN || MEMBER" mat-button class="save__button" routerLink="/add-player">ДОДАТИ ГРАВЦЯ
+      </button>
+      <mat-paginator class="paginator" [pageSize]="10" [pageSizeOptions]="[5, 10, 20]"></mat-paginator>
+      <p class="info-text mat-body-2" *ngIf="users.length <= 0">Гравці відсутні</p>
+      <p class="info-text mat-body-2" *ngIf="loading">Loading...</p>
+    </div>
   </div>
 </main>

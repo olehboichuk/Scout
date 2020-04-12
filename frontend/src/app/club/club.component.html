@@ -1,1 +1,69 @@
-<p>club works!</p>
+<div class="content">
+  <mat-spinner *ngIf="loading"></mat-spinner>
+  <div class="profile" *ngIf="!loading">
+    <form (ngSubmit)="onSubmit()" [formGroup]="changeForm">
+      <div class="player">
+        <img class="img animated flipInY" src="../../assets/img/shield.png" alt="Club">
+        <p class="animated infinite bounce delay-2s" style="position: absolute;top: 300px;left: 262px;font-size: 22.3px;color: darkblue;text-transform: uppercase;">тут може бути ваша
+        <p class="animated infinite bounce delay-2s" style="position: absolute;top: 340px;left: 330px;font-size: 22.3px;color: darkblue;text-transform: uppercase;">реклама</p>
+        <div class="pl__btn">
+          <div class="player__info">
+            <div class="form__user">
+              <div *ngIf="edited" class="player__item">
+                <p class="player--text">Назва клубу:</p>
+                <p class="player__name">{{club.Name_Club}}</p>
+              </div>
+              <mat-form-field *ngIf="!edited" class="form__input">
+                <input matInput type="text" formControlName="Name_Club"
+                       placeholder="Назва клубу:" value="{{club.Name_Club}}"/>
+              </mat-form-field>
+              <div *ngIf="edited" class="player__item">
+                <p class="player--text">Місто:</p>
+                <p class="player__name">{{club.City}}</p>
+              </div>
+              <mat-form-field *ngIf="!edited" class="form__input">
+                <input matInput type="text" formControlName="City"
+                       placeholder="Місто:" value="{{club.City}}"/>
+              </mat-form-field>
+              <button mat-raised-button *ngIf="!edited" [disabled]="!changeForm.valid" class="save__button" disabled
+                      type="submit">
+                <p *ngIf="!loading">SAVE</p>
+                <img *ngIf="loading"
+                     src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA=="/>
+              </button>
+            </div>
+            <div class="form__user">
+              <div *ngIf="edited" class="player__item">
+                <p class="player--text">Вулиця:</p>
+                <p class="player__name">{{club.Street}}</p>
+              </div>
+              <mat-form-field *ngIf="!edited" class="form__input">
+                <input matInput type="text" formControlName="Street"
+                       placeholder="Вулиця:" value="{{club.Street}}"/>
+              </mat-form-field>
+              <div *ngIf="edited" class="player__item">
+                <p class="player--text">Будівля:</p>
+                <p class="player__name">{{club.Build}}</p>
+              </div>
+              <mat-form-field *ngIf="!edited" class="form__input">
+                <input matInput type="text" formControlName="Build"
+                       placeholder="Будівля:" value="{{club.Build}}"/>
+              </mat-form-field>
+              <button *ngIf="!edited" class="cancel__button" mat-raised-button (click)="onCancel()" type="button">
+                CANCEL
+              </button>
+            </div>
+          </div>
+          <div class="edit_del">
+            <button *ngIf="edited && MEMBER" class="edit__button" mat-raised-button (click)="onEdit()" type="button">
+              EDIT CLUB
+            </button>
+            <button *ngIf="edited && ADMIN" class="cancel__button" mat-raised-button (click)="openDialog()"
+                    type="button">DELETE CLUB
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

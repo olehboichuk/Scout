@@ -44,7 +44,8 @@ function combinepLAYER(arr) {
             Height: current['Height'],
             Weight: current['Weight'],
             Kicking_Leg: current['Kicking_Leg'],
-            Agent: current['Agent'],
+            Agent_Name: current['Agent_Name'],
+            Agent_Phone: current['Agent_Phone'],
             Name_Club: current['Name_Club'],
             Position: telephones.flat(10)
         };
@@ -65,8 +66,9 @@ router.route('/player')
     })
     .post((req, res) => {
         db.query(sql.createPlayer, req.body, (err, result) => {
+            if (err) return res.status(500).send({message: "There was a problem registering the user."});
             if (err) throw err;
-            res.sendStatus(200);
+            res.status(200).send({message: "Player success added."});
         });
     })
     .put((req, res) => {
@@ -150,12 +152,13 @@ router.route('/seasons/forward/player/:id')
             if (err) throw err;
             res.send(result);
         });
-    }).post((req, res) => {
-    db.query(sql.getForwardStatsBySeason, [req.params.id, req.body.Season], (err, result) => {
-        if (err) throw err;
-        res.send(result);
+    })
+    .post((req, res) => {
+        db.query(sql.getForwardStatsBySeason, [req.params.id, req.body.Season], (err, result) => {
+            if (err) throw err;
+            res.send(result);
+        });
     });
-});
 //get Player Stats by id
 router.route('/seasons/halfback/player/:id')
     .get((req, res) => {
@@ -177,12 +180,13 @@ router.route('/seasons/defender/player/:id')
             if (err) throw err;
             res.send(result);
         });
-    }).post((req, res) => {
-    db.query(sql.getDefenderStatsBySeason, [req.params.id, req.body.Season], (err, result) => {
-        if (err) throw err;
-        res.send(result);
+    })
+    .post((req, res) => {
+        db.query(sql.getDefenderStatsBySeason, [req.params.id, req.body.Season], (err, result) => {
+            if (err) throw err;
+            res.send(result);
+        });
     });
-});
 //get Player Stats by id
 router.route('/seasons/goalkeeper/player/:id')
     .get((req, res) => {
@@ -190,12 +194,13 @@ router.route('/seasons/goalkeeper/player/:id')
             if (err) throw err;
             res.send(result);
         });
-    }).post((req, res) => {
-    db.query(sql.getGoalkeeperStatsBySeason, [req.params.id, req.body.Season], (err, result) => {
-        if (err) throw err;
-        res.send(result);
+    })
+    .post((req, res) => {
+        db.query(sql.getGoalkeeperStatsBySeason, [req.params.id, req.body.Season], (err, result) => {
+            if (err) throw err;
+            res.send(result);
+        });
     });
-});
 
 router.route('/player/positions')
     .get((req, res) => {
@@ -203,20 +208,139 @@ router.route('/player/positions')
             if (err) throw err;
             res.send(result);
         });
-    }).post((req, res) => {
-    db.query(sql.deletePlayerPositionsById, req.body.id, (err, result) => {
-        if (err) throw err;
-    });
-    let index = 0;
-    req.body.position.forEach(pos => {
-        db.query(sql.updatePlayerPositionsById, [req.body.id, pos], (err, result) => {
+    })
+    .post((req, res) => {
+        db.query(sql.deletePlayerPositionsById, req.body.id, (err, result) => {
             if (err) throw err;
-            if (index === (req.body.position.length - 1)) {
-                res.send(result);
-            }
-            index++;
+        });
+        let index = 0;
+        req.body.position.forEach(pos => {
+            db.query(sql.updatePlayerPositionsById, [req.body.id, pos], (err, result) => {
+                if (err) throw err;
+                if (index === (req.body.position.length - 1)) {
+                    res.send(result);
+                }
+                index++;
+            });
         });
     });
+
+//Contract CRUD
+router.route('/player/contract')
+    .post((req, res) => {
+        db.query(sql.createContract, [req.body.Number_Licenses, req.body.Name_Club, req.body.Contract_Start, req.body.Contract_End], (err, result) => {
+            if (err) throw err;
+            res.send(result);
+        });
+    })
+    .put((req, res) => {
+        db.query(sql.updateContract, [req.body.Name_Club, req.body.Contract_Start, req.body.Contract_End, req.body.Number_Licenses, req.body.Previous_Name_Club, req.body.Previous_Contract_Start], (err, result) => {
+            if (err) throw err;
+            res.send(result);
+        });
+    });
+
+router.route('/player/contract/delete')
+    .post((req, res) => {
+        db.query(sql.deleteContract, [req.body.Number_Licenses, req.body.Name_Club, req.body.Contract_Start], (err, result) => {
+            if (err) throw err;
+            res.send(result);
+        });
+    });
+
+
+router.route('/player/stats/defender')
+    .post((req, res) => {
+        db.query(sql.addDefenderStats, req.body, (err, result) => {
+            if (err) throw err;
+            res.send(result);
+        });
+    })
+    .put((req, res) => {
+        db.query(sql.updateDefenderStats, req.body, (err, result) => {
+            if (err) throw err;
+            res.send(result);
+        });
+    });
+router.route('/player/stats/forward')
+    .post((req, res) => {
+        db.query(sql.addForwardStats, req.body, (err, result) => {
+            if (err) throw err;
+            res.send(result);
+        });
+    }).put((req, res) => {
+    db.query(sql.updateForwardStats, req.body, (err, result) => {
+        if (err) throw err;
+        res.send(result);
+    });
 });
+router.route('/player/stats/goalkeeper')
+    .post((req, res) => {
+        db.query(sql.addGoalkeeperStats, req.body, (err, result) => {
+            if (err) throw err;
+            res.send(result);
+        });
+    }).put((req, res) => {
+    db.query(sql.updateGoalkeeperStats, req.body, (err, result) => {
+        if (err) throw err;
+        res.send(result);
+    });
+});
+router.route('/player/stats/halfback')
+    .post((req, res) => {
+        db.query(sql.addHalfbackStats, req.body, (err, result) => {
+            if (err) throw err;
+            res.send(result);
+        });
+    }).put((req, res) => {
+    db.query(sql.updateHalfbackStats, req.body, (err, result) => {
+        if (err) throw err;
+        res.send(result);
+    });
+});
+
+
+router.route('/player/stats/defender/delete')
+    .post((req, res) => {
+        db.query(sql.deleteDefenderStats, [req.body.Number_Licenses, req.body.Season], (err, result) => {
+            if (err) throw err;
+            res.send(result);
+        });
+    });
+router.route('/player/stats/forward/delete')
+    .post((req, res) => {
+        db.query(sql.deleteForwardStats, [req.body.Number_Licenses, req.body.Season], (err, result) => {
+            if (err) throw err;
+            res.send(result);
+        });
+    });
+router.route('/player/stats/goalkeeper/delete')
+    .post((req, res) => {
+        db.query(sql.deleteGoalkeeperStats, [req.body.Number_Licenses, req.body.Season], (err, result) => {
+            if (err) throw err;
+            res.send(result);
+        });
+    });
+router.route('/player/stats/halfback/delete')
+    .post((req, res) => {
+        db.query(sql.deleteHalfbackStats, [req.body.Number_Licenses, req.body.Season], (err, result) => {
+            if (err) throw err;
+            res.send(result);
+        });
+    });
+
+router.route('/filters')
+    .get((req, res) => {
+        db.query(sql.filterOn, (err, result) => {
+            if (err) throw err;
+            res.send(result);
+        });
+    })
+    .post((req, res) => {
+        db.query(sql.getAllPlayersFilter, [req.body.Max_Coast, req.body.Min_Coast, req.body.Max_Age, req.body.Min_Age, req.body.Kicking_Leg, req.body.Kicking_Leg, req.body.Kicking_Leg, req.body.Positions, req.body.Positions, req.body.Positions], (err, result) => {
+            if (err) throw err;
+            res.send(combinepLAYER(result));
+        });
+    });
 
 module.exports = router;

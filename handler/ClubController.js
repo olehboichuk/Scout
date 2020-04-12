@@ -12,6 +12,13 @@ let db = mysql.createConnection({
     database: 'scout'
 });
 
+router.route('/clubs/names')
+    .get((req, res) => {
+        db.query(sql.getAllClubsNames, (err, result) => {
+            if (err) throw err;
+            res.send(result);
+        });
+    });
 
 //CLUBS API------------------------------------CLUBS API---------------------------CLUBS API
 router.route('/club')
@@ -25,7 +32,7 @@ router.route('/club')
         console.log(req.body);
         db.query(sql.createClub, req.body, (err, result) => {
             if (err) throw err;
-            res.sendStatus(200);
+            res.send(result);
         });
     });
 
@@ -58,21 +65,20 @@ router.route('/club/:name')
         db.query(sql.getClubByName, req.params.name, (err, result) => {
             if (err) throw err;
             res.send(result);
-            res.sendStatus(200);
         });
     })
     .put((req, res) => {
         console.log(req.body);
+        console.log(req.params.name);
         db.query(sql.updateClubById, [req.body, req.params.name], (err, result) => {
             if (err) throw err;
-            res.sendStatus(200);
+            res.send(result);
         });
     })
     .delete((req, res) => {
-        console.log(req.params.name);
         db.query(sql.deleteClubById, req.params.name, (err, result) => {
             if (err) throw err;
-            res.sendStatus(200);
+            res.send(result);
         });
     });
 

@@ -28,6 +28,13 @@ import {MatDatepickerModule} from "@angular/material/datepicker";
 import {MatDialogModule} from "@angular/material/dialog";
 import {MatSortModule} from "@angular/material/sort";
 import {MatExpansionModule} from "@angular/material/expansion";
+import { AddPlayerComponent } from './add-player/add-player.component';
+import {DatePipe} from "@angular/common";
+import {Ng5SliderModule} from "ng5-slider";
+import { AddClubComponent } from './add-club/add-club.component';
+import { AddTournamentComponent } from './add-tournament/add-tournament.component';
+import { TournamentComponent } from './tournament/tournament.component';
+import { TournamentsComponent } from './tournaments/tournaments.component';
 
 @NgModule({
   declarations: [
@@ -39,7 +46,12 @@ import {MatExpansionModule} from "@angular/material/expansion";
     ClubComponent,
     LoginComponent,
     SignUpComponent,
-    DialogDelete
+    DialogDelete,
+    AddPlayerComponent,
+    AddClubComponent,
+    AddTournamentComponent,
+    TournamentComponent,
+    TournamentsComponent
   ],
   imports: [
     BrowserModule,
@@ -63,12 +75,13 @@ import {MatExpansionModule} from "@angular/material/expansion";
     MatSortModule,
     MatExpansionModule,
     FormsModule,
+    Ng5SliderModule,
   ],
   providers: [{
     provide: HTTP_INTERCEPTORS,
     useClass: AuthInterceptor,
     multi: true,
-  }],
+  },DatePipe],
   bootstrap: [AppComponent],
   entryComponents:[DialogDelete]
 })

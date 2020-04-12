@@ -1,0 +1,43 @@
+<div class="content">
+  <mat-spinner *ngIf="loading"></mat-spinner>
+  <div class="profile" *ngIf="!loading">
+    <form (ngSubmit)="onSubmit()" [formGroup]="changeForm">
+      <div class="player">
+        <img class="img" src="../../assets/img/player.png" alt="Player">
+        <div class="pl__btn">
+          <div class="player__info">
+            <div class="form__user">
+              <mat-form-field  class="form__input">
+                <input matInput type="text" formControlName="Name_Club"
+                       placeholder="Назва клубу:" />
+              </mat-form-field>
+              <mat-form-field  class="form__input">
+                <input matInput type="text" formControlName="City"
+                       placeholder="Місто:" />
+              </mat-form-field>
+              <button mat-raised-button [disabled]="!changeForm.valid" class="save__button" disabled
+                      type="submit">
+                <p *ngIf="!loading">SAVE</p>
+                <img *ngIf="loading"
+                     src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA=="/>
+              </button>
+            </div>
+            <div class="form__user">
+              <mat-form-field  class="form__input">
+                <input matInput type="text" formControlName="Street"
+                       placeholder="Вулиця:"/>
+              </mat-form-field>
+              <mat-form-field class="form__input">
+                <input matInput type="text" formControlName="Build"
+                       placeholder="Будівля:" />
+              </mat-form-field>
+              <button class="cancel__button" mat-raised-button routerLink="/clubs" type="button">
+                CANCEL
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

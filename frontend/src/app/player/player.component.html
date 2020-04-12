@@ -1,5 +1,7 @@
 <div class="content">
+  <mat-spinner *ngIf="loading"></mat-spinner>
   <div class="profile" *ngIf="!loading">
+    <!--    ЗАГАЛЬНА ІНФА ПРО ГРАВЦЯ-->
     <form (ngSubmit)="onSubmit()" [formGroup]="changeForm">
       <div class="player">
         <img class="img" src="../../assets/img/player.png" alt="Player">
@@ -49,7 +51,9 @@
               </mat-form-field>
               <div *ngIf="edited" class="player__item">
                 <p class="player--text">Клуб:</p>
-                <p class="player__name">{{player.Name_Club}}</p>
+                <p class="player__name complaints__count" *ngIf="player.Name_Club!=null" [routerLink]="['/club',player.Name_Club]">{{player.Name_Club}}</p>
+                <p class="player__name" *ngIf="player.Name_Club==null">-</p>
+
               </div>
               <mat-form-field *ngIf="!edited" class="form__input">
                 <input matInput type="text" disabled
@@ -57,9 +61,10 @@
               </mat-form-field>
               <div *ngIf="edited" class="player__item">
                 <p class="player--text">Позиції:</p>
-                <p class="player__name">{{player.Position}}</p>
+                <p class="player__name" *ngIf="player.Position!=null">{{player.Position}}</p>
+                <p class="player__name" *ngIf="player.Position==null">-</p>
               </div>
-              <mat-form-field  *ngIf="!edited" class="form__input">
+              <mat-form-field *ngIf="!edited" class="form__input">
                 <mat-select placeholder="Позиції" formControlName="Position" multiple>
                   <mat-option value="Defender">Defender</mat-option>
                   <mat-option value="Forward">Forward</mat-option>
@@ -67,8 +72,6 @@
                   <mat-option value="Halfback">Halfback</mat-option>
                 </mat-select>
               </mat-form-field>
-
-
               <button mat-raised-button *ngIf="!edited" [disabled]="!changeForm.valid" class="save__button" disabled
                       type="submit">
                 <p *ngIf="!loading">SAVE</p>
@@ -130,11 +133,15 @@
               </mat-form-field>
               <div *ngIf="edited" class="player__item">
                 <p class="player--text">Агент:</p>
-                <p class="player__name">{{player.Agent}}</p>
+                <p class="player__name">{{player.Agent_Name}} - {{player.Agent_Phone}}</p>
               </div>
               <mat-form-field *ngIf="!edited" class="form__input">
-                <input matInput type="text" formControlName="Agent"
-                       placeholder="Агент:" value="{{player.Agent}}"/>
+                <input matInput type="text" formControlName="Agent_Name" placeholder="Ім'я агента:"
+                       value="{{player.Agent_Name}}"/>
+              </mat-form-field>
+              <mat-form-field *ngIf="!edited" class="form__input">
+                <input matInput type="text" formControlName="Agent_Phone" placeholder="Телефон:"
+                       value="{{player.Agent_Phone}}"/>
               </mat-form-field>
               <button *ngIf="!edited" class="cancel__button" mat-raised-button (click)="onCancel()" type="button">
                 CANCEL
@@ -176,31 +183,112 @@
       </mat-expansion-panel-header>
       <div class="clubs">
         <div *ngIf="clubs[0].Active==null" class="club__heder"><p class="club--text">Цей гравець ще не грав у жодному
-          клубі</p></div>
-      </div>
-      <div *ngFor="let club of clubs">
-        <div class="clubs" *ngIf="club.Active==0">
-          <div class="club__heder">
-          <span class="material-icons">
-          label_outlined
-          </span>
-            <p class="club--text">Клуб:</p>
-            <p class="club__name">{{club.Name_Club}}</p>
-          </div>
-          <div class="club__info">
-            <p class="club--text">Контракт:</p>
-            <p class="club__name">{{club.Contract_Start | date}}</p>
-            <p class="club--text">—</p>
-            <p class="club__name">{{club.Contract_End | date}}</p>
-          </div>
+          клубі</p>
         </div>
       </div>
+      <div *ngFor="let club of clubs; let i = index">
+        <form class="clubs" (ngSubmit)="onUpdateContract(i)" [formGroup]="editContractForm">
+          <div class="club__heder">
+          <span class="material-icons" *ngIf="numEdited!=i && club.Active==0">
+          label_outlined
+          </span>
+            <span class="material-icons" style="margin-right: 24px" *ngIf="numEdited!=i && club.Active==1">
+          label
+          </span>
+            <p class="club--text" *ngIf="numEdited!=i">Клуб:</p>
+            <p class="club__name" *ngIf="numEdited!=i">{{club.Name_Club}}</p>
+            <mat-form-field class="form__input" *ngIf="numEdited==i">
+              <mat-select placeholder="Клуб" formControlName="Contract_C">
+                <mat-option *ngFor=" let club of clubNames" value="{{club.Name_Club}}">{{club.Name_Club}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="club__info">
+            <p class="club--text" *ngIf="numEdited!=i">Контракт:</p>
+            <p class="club__name" *ngIf="numEdited!=i">{{club.Contract_Start | date}}</p>
+            <mat-form-field class="form__input" *ngIf="numEdited==i">
+              <input placeholder="Початок контракту:" (dateChange)="onChangeDate()" value="{{club.Contract_Start}}"
+                     formControlName="Contract_S"
+                     matInput
+                     [matDatepicker]="picker8">
+              <mat-datepicker-toggle matSuffix [for]="picker8"></mat-datepicker-toggle>
+              <mat-datepicker #picker8></mat-datepicker>
+            </mat-form-field>
+            <p class="club--text">—</p>
+            <p class="club__name" *ngIf="numEdited!=i">{{club.Contract_End | date}}</p>
+            <mat-form-field class="form__input" *ngIf="numEdited==i">
+              <input placeholder="Кінець контракту:" (dateChange)="onChangeDate()" value="{{club.Contract_End}}"
+                     formControlName="Contract_E"
+                     matInput [matDatepicker]="picker7">
+              <mat-datepicker-toggle matSuffix [for]="picker7"></mat-datepicker-toggle>
+              <mat-datepicker #picker7></mat-datepicker>
+            </mat-form-field>
+          </div>
+          <div class="btns" *ngIf="(ADMIN || MEMBER) && numEdited!=i">
+            <button *ngIf="ADMIN||MEMBER" mat-raised-button class="edit__button" (click)="onEditContract(i)"
+                    type="button">EDIT
+            </button>
+            <button *ngIf="ADMIN" class="cancel__button" mat-raised-button (click)="onDeleteContract(i)" type="button">
+              DELETE
+            </button>
+          </div>
+          <div class="btns" *ngIf="numEdited==i">
+            <button mat-raised-button class="save__button" type="submit">SAVE</button>
+            <button class="cancel__button" mat-raised-button (click)="onCancelEditContract()" type="button">CANCEL
+            </button>
+          </div>
+        </form>
+      </div>
+      <div class="add">
+        <button *ngIf="(ADMIN || MEMBER) && addContract" (click)="onAddContract()" mat-button class="save__button">
+          ДОДАТИ КОНТРАКТ
+        </button>
+      </div>
+      <form *ngIf="!addContract" (ngSubmit)="onSubmitAdd()" [formGroup]="addContractForm">
+        <div class="clubs" style="margin-top: 30px">
+          <div class="club__heder">
+            <mat-form-field class="form__input">
+              <mat-select placeholder="Клуб" formControlName="Contract_Club">
+                <mat-option *ngFor=" let club of clubNames" value="{{club.Name_Club}}">{{club.Name_Club}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="club__info">
+            <mat-form-field class="form__input">
+              <input placeholder="Початок контракту:" (dateChange)="onChangeDate()" formControlName="Contract_Start"
+                     matInput
+                     [matDatepicker]="picker4">
+              <mat-datepicker-toggle matSuffix [for]="picker4"></mat-datepicker-toggle>
+              <mat-datepicker #picker4></mat-datepicker>
+            </mat-form-field>
+            <p class="club--text"> — </p>
+            <mat-form-field class="form__input">
+              <input placeholder="Кінець контракту:" (dateChange)="onChangeDate()" formControlName="Contract_End"
+                     matInput [matDatepicker]="picker5">
+              <mat-datepicker-toggle matSuffix [for]="picker5"></mat-datepicker-toggle>
+              <mat-datepicker #picker5></mat-datepicker>
+            </mat-form-field>
+          </div>
+          <div class="btns">
+            <button mat-raised-button [disabled]="!addContractForm.valid" class="save__button" disabled
+                    type="submit">
+              <p *ngIf="!loading">SAVE</p>
+              <img *ngIf="loading"
+                   src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA=="/>
+            </button>
+            <button class="cancel__button" mat-raised-button (click)="onCancelAdd()" type="button">
+              CANCEL
+            </button>
+          </div>
+        </div>
+        <mat-error *ngIf="contractError" class="error">{{contractError}}</mat-error>
+      </form>
     </mat-expansion-panel>
-    <!--    СТАТИСТИКА-->
+    <!--    СТАТИСТИКА ГРАВЦЯ-->
     <div class="player__stats">
       <p class="stats--header">СТАТИСТИКА</p>
       <div class="stats--filters">
-        <div class="filter" *ngIf="player.Position == null ? false : player.Position[0].length > 1"><p
+        <div class="filter" *ngIf="addStats && (player.Position == null ? false : player.Position[0].length > 1)"><p
           class="filter-header"></p>
           <mat-form-field class="form__input">
             <mat-select placeholder="Позиція" [(ngModel)]="selectedPosition" (ngModelChange)="onSelectPosition()">
@@ -208,18 +296,27 @@
             </mat-select>
           </mat-form-field>
         </div>
-        <div class="filter" *ngIf="positionSelected && seasons.length!=0"><p class="filter-header"></p>
+        <div class="filter" *ngIf="addStats &&positionSelected && seasons.length!=0"><p class="filter-header"></p>
           <mat-form-field class="form__input">
             <mat-select placeholder="Сезон" [(ngModel)]="selectedSeason" (ngModelChange)="onSelectSeason()">
               <mat-option *ngFor="let ses of seasons" [value]="ses.Season">{{ses.Season}}</mat-option>
             </mat-select>
           </mat-form-field>
         </div>
+        <div class="btns"
+             *ngIf="(ADMIN || MEMBER) && addStats &&positionSelected && selectedSeason&& seasons.length!=0">
+          <button *ngIf="ADMIN||MEMBER" mat-raised-button class="edit__button" (click)="onEditStats()"
+                  type="button">EDIT
+          </button>
+          <button *ngIf="ADMIN" class="cancel__button" mat-raised-button (click)="onDeleteStats()" type="button">
+            DELETE
+          </button>
+        </div>
       </div>
       <p
-        *ngIf="(positionSelected || (player.Position == null ? false : player.Position[0].length == 1)) && seasons.length==0"
+        *ngIf="addStats && (positionSelected || (player.Position == null ? false : player.Position[0].length == 1)) && seasons.length==0"
         class="stats--header">статистика за обраними критеріями відсутня</p>
-      <table mat-table *ngIf="selectedSeason && selectedPosition=='Forward'" [dataSource]="dataSource"
+      <table mat-table *ngIf="addStats && selectedSeason && selectedPosition=='Forward'" [dataSource]="dataSource"
              class="mat-elevation-z8">
         <ng-container matColumnDef="Number_Of_Matches">
           <th mat-header-cell *matHeaderCellDef>Матчі</th>
@@ -276,7 +373,7 @@
         <tr mat-header-row *matHeaderRowDef="displayedColumnsForward"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumnsForward;"></tr>
       </table>
-      <table mat-table *ngIf="selectedSeason && selectedPosition=='Halfback'" [dataSource]="dataSource"
+      <table mat-table *ngIf="addStats && selectedSeason && selectedPosition=='Halfback'" [dataSource]="dataSource"
              class="mat-elevation-z8">
         <ng-container matColumnDef="Number_Of_Matches">
           <th mat-header-cell *matHeaderCellDef>Матчі</th>
@@ -321,7 +418,7 @@
         <tr mat-header-row *matHeaderRowDef="displayedColumnsHalfback"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumnsHalfback;"></tr>
       </table>
-      <table mat-table *ngIf="selectedSeason && selectedPosition=='Defender'" [dataSource]="dataSource"
+      <table mat-table *ngIf="addStats && selectedSeason && selectedPosition=='Defender'" [dataSource]="dataSource"
              class="mat-elevation-z8">
         <ng-container matColumnDef="Number_Of_Matches">
           <th mat-header-cell *matHeaderCellDef>Матчі</th>
@@ -358,7 +455,7 @@
         <tr mat-header-row *matHeaderRowDef="displayedColumnsDefender"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumnsDefender;"></tr>
       </table>
-      <table mat-table *ngIf="selectedSeason && selectedPosition=='Goalkeeper'" [dataSource]="dataSource"
+      <table mat-table *ngIf="addStats && selectedSeason && selectedPosition=='Goalkeeper'" [dataSource]="dataSource"
              class="mat-elevation-z8">
         <ng-container matColumnDef="Number_Of_Matches">
           <th mat-header-cell *matHeaderCellDef>Матчі</th>
@@ -399,7 +496,210 @@
         <tr mat-header-row *matHeaderRowDef="displayedColumnsGoalkeeper"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumnsGoalkeeper;"></tr>
       </table>
-
+      <div class="add">
+        <button *ngIf="(ADMIN || MEMBER) && addStats" style="margin-top: 20px;" (click)="onAddStats()" mat-button
+                class="save__button">
+          ДОДАТИ СТАТИСТИКУ
+        </button>
+      </div>
+      <mat-form-field class="form__input" *ngIf="!addStats && !editStats">
+        <mat-select placeholder="Оберіть позицію" [(ngModel)]="addStatsPorition">
+          <mat-option *ngFor="let pos of player.Position" [value]="pos">{{pos}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <form class="addStats" *ngIf="!addStats && addStatsPorition=='Defender'" (ngSubmit)="onAddStatsDefender()"
+            [formGroup]="addStatsDefender">
+        <div class="add__form">
+          <mat-form-field class="form__input">
+            <input matInput type="text" formControlName="DSeason" placeholder="Сезон(00-00):"
+                   pattern="[0-9]{2}[-]{1}[0-9]{2}"/>
+          </mat-form-field>
+          <mat-form-field class="form__input">
+            <input matInput type="number" min="0" formControlName="DNumber_Of_Matches"
+                   placeholder="Кількість зіграних матчів:"/>
+          </mat-form-field>
+          <mat-form-field class="form__input">
+            <input matInput type="number" min="0" formControlName="DNumber_Yellow_Cards"
+                   placeholder="Кількість жовтих карток:"/>
+          </mat-form-field>
+          <mat-form-field class="form__input">
+            <input matInput type="number" min="0" formControlName="DNumber_Red_Cards"
+                   placeholder="Кількість червоних карток:"/>
+          </mat-form-field>
+          <mat-form-field class="form__input">
+            <input matInput type="number" min="0" formControlName="DNumber_Play_Minutes"
+                   placeholder="Кількість зіграних хвилин:"/>
+          </mat-form-field>
+          <mat-form-field class="form__input">
+            <input matInput type="number" min="0" max="100" formControlName="DPasses_Accuracy"
+                   placeholder="Точність пасу, %:" pattern="[0-9]{1,2}"/>
+          </mat-form-field>
+          <mat-form-field class="form__input">
+            <input matInput type="number" min="0" formControlName="DNumber_Selections_Match"
+                   placeholder="Кількість відборів за матч:"/>
+          </mat-form-field>
+          <mat-form-field class="form__input">
+            <input matInput type="number" min="0" formControlName="DNumber_Interceptions_Match"
+                   placeholder="Кількість перехватів за матч:"/>
+          </mat-form-field>
+          <div style="display: flex; justify-content: space-around">
+            <button mat-raised-button class="save__button" [disabled]="!addStatsDefender.valid" disabled type="submit">
+              SAVE
+            </button>
+            <button class="cancel__button" mat-raised-button (click)="cancelAddStats()" type="button">CANCEL</button>
+          </div>
+        </div>
+      </form>
+      <form class="addStats" *ngIf="!addStats && addStatsPorition=='Forward'" (ngSubmit)="onAddStatsForward()"
+            [formGroup]="addStatsForward">
+        <div class="add__form">
+          <mat-form-field class="form__input">
+            <input matInput type="text" formControlName="FSeason" placeholder="Сезон(00-00):"
+                   pattern="[0-9]{2}[-]{1}[0-9]{2}"/>
+          </mat-form-field>
+          <mat-form-field class="form__input">
+            <input matInput type="number" min="0" formControlName="FNumber_Of_Matches"
+                   placeholder="Кількість зіграних матчів:"/>
+          </mat-form-field>
+          <mat-form-field class="form__input">
+            <input matInput type="number" min="0" formControlName="FNumber_Yellow_Cards"
+                   placeholder="Кількість жовтих карток:"/>
+          </mat-form-field>
+          <mat-form-field class="form__input">
+            <input matInput type="number" min="0" formControlName="FNumber_Red_Cards"
+                   placeholder="Кількість червоних карток:"/>
+          </mat-form-field>
+          <mat-form-field class="form__input">
+            <input matInput type="number" min="0" formControlName="FNumber_Play_Minutes"
+                   placeholder="Кількість зіграних хвилин:"/>
+          </mat-form-field>
+          <mat-form-field class="form__input">
+            <input matInput type="number" min="0" max="100" formControlName="FPasses_Accuracy"
+                   placeholder="Точність пасу, %:" pattern="[0-9]{1,2}"/>
+          </mat-form-field>
+          <mat-form-field class="form__input">
+            <input matInput type="number" min="0" formControlName="FGoals"
+                   placeholder="Кількість голів:"/>
+          </mat-form-field>
+          <mat-form-field class="form__input">
+            <input matInput type="number" min="0" formControlName="FAssists"
+                   placeholder="Кількість асистів:"/>
+          </mat-form-field>
+          <mat-form-field class="form__input">
+            <input matInput type="number" min="0" formControlName="FKey_Pass"
+                   placeholder="Кількість ключових пасів:"/>
+          </mat-form-field>
+          <mat-form-field class="form__input">
+            <input matInput type="number" min="0" formControlName="FHit_Match"
+                   placeholder="Кількість ударів за матч:"/>
+          </mat-form-field>
+          <div style="display: flex; justify-content: space-around">
+            <button mat-raised-button class="save__button" [disabled]="!addStatsForward.valid" disabled type="submit">
+              SAVE
+            </button>
+            <button class="cancel__button" mat-raised-button (click)="cancelAddStats()" type="button">CANCEL</button>
+          </div>
+        </div>
+      </form>
+      <form class="addStats" *ngIf="!addStats && addStatsPorition=='Goalkeeper'" (ngSubmit)="onAddStatsGoalkeeper()"
+            [formGroup]="addStatsGoalkeeper">
+        <div class="add__form">
+          <mat-form-field class="form__input">
+            <input matInput type="text" formControlName="GSeason" placeholder="Сезон(00-00):"
+                   pattern="[0-9]{2}[-]{1}[0-9]{2}"/>
+          </mat-form-field>
+          <mat-form-field class="form__input">
+            <input matInput type="number" min="0" formControlName="GNumber_Of_Matches"
+                   placeholder="Кількість зіграних матчів:"/>
+          </mat-form-field>
+          <mat-form-field class="form__input">
+            <input matInput type="number" min="0" formControlName="GNumber_Yellow_Cards"
+                   placeholder="Кількість жовтих карток:"/>
+          </mat-form-field>
+          <mat-form-field class="form__input">
+            <input matInput type="number" min="0" formControlName="GNumber_Red_Cards"
+                   placeholder="Кількість червоних карток:"/>
+          </mat-form-field>
+          <mat-form-field class="form__input">
+            <input matInput type="number" min="0" formControlName="GNumber_Play_Minutes"
+                   placeholder="Кількість зіграних хвилин:"/>
+          </mat-form-field>
+          <mat-form-field class="form__input">
+            <input matInput type="number" min="0" max="100" formControlName="GPasses_Accuracy"
+                   placeholder="Точність пасу, %:" pattern="[0-9]{1,2}"/>
+          </mat-form-field>
+          <mat-form-field class="form__input">
+            <input matInput type="number" min="0" formControlName="GSaves_Match"
+                   placeholder="Кількість сейвів:"/>
+          </mat-form-field>
+          <mat-form-field class="form__input">
+            <input matInput type="number" min="0" formControlName="GMissed_Goal_Match"
+                   placeholder="Кількість пропущених м'ячів:"/>
+          </mat-form-field>
+          <mat-form-field class="form__input">
+            <input matInput type="number" min="0" max="100" pattern="[0-9]{1,2}"
+                   formControlName="GPercentage_Served_Penalty"
+                   placeholder="Відсоток відбитих пенальті, %:"/>
+          </mat-form-field>
+          <div style="display: flex; justify-content: space-around">
+            <button mat-raised-button class="save__button" [disabled]="!addStatsGoalkeeper.valid" disabled
+                    type="submit">SAVE
+            </button>
+            <button class="cancel__button" mat-raised-button (click)="cancelAddStats()" type="button">CANCEL</button>
+          </div>
+        </div>
+      </form>
+      <form class="addStats" *ngIf="!addStats && addStatsPorition=='Halfback'" (ngSubmit)="onAddStatsHalfback()"
+            [formGroup]="addStatsHalfback">
+        <div class="add__form">
+          <mat-form-field class="form__input">
+            <input matInput type="text" formControlName="HSeason" placeholder="Сезон(00-00):"
+                   pattern="[0-9]{2}[-]{1}[0-9]{2}"/>
+          </mat-form-field>
+          <mat-form-field class="form__input">
+            <input matInput type="number" min="0" formControlName="HNumber_Of_Matches"
+                   placeholder="Кількість зіграних матчів:"/>
+          </mat-form-field>
+          <mat-form-field class="form__input">
+            <input matInput type="number" min="0" formControlName="HNumber_Yellow_Cards"
+                   placeholder="Кількість жовтих карток:"/>
+          </mat-form-field>
+          <mat-form-field class="form__input">
+            <input matInput type="number" min="0" formControlName="HNumber_Red_Cards"
+                   placeholder="Кількість червоних карток:"/>
+          </mat-form-field>
+          <mat-form-field class="form__input">
+            <input matInput type="number" min="0" formControlName="HNumber_Play_Minutes"
+                   placeholder="Кількість зіграних хвилин:"/>
+          </mat-form-field>
+          <mat-form-field class="form__input">
+            <input matInput type="number" min="0" max="100" formControlName="HPasses_Accuracy"
+                   placeholder="Точність пасу, %:" pattern="[0-9]{1,2}"/>
+          </mat-form-field>
+          <mat-form-field class="form__input">
+            <input matInput type="number" min="0" formControlName="HNumber_Interceptions_Match"
+                   placeholder="Кількість перехватів за матч:"/>
+          </mat-form-field>
+          <mat-form-field class="form__input">
+            <input matInput type="number" min="0" formControlName="HGoals"
+                   placeholder="Кількість голів:"/>
+          </mat-form-field>
+          <mat-form-field class="form__input">
+            <input matInput type="number" min="0" formControlName="HAssists"
+                   placeholder="Кількість асистів:"/>
+          </mat-form-field>
+          <mat-form-field class="form__input">
+            <input matInput type="number" min="0" formControlName="HKey_Pass"
+                   placeholder="Кількість ключових пасів:"/>
+          </mat-form-field>
+          <div style="display: flex; justify-content: space-around">
+            <button mat-raised-button class="save__button" [disabled]="!addStatsHalfback.valid" disabled type="submit">
+              SAVE
+            </button>
+            <button class="cancel__button" mat-raised-button (click)="cancelAddStats()" type="button">CANCEL</button>
+          </div>
+        </div>
+      </form>
     </div>
   </div>
 </div>

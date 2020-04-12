@@ -1,1 +1,41 @@
-<p>clubs works!</p>
+<main>
+  <mat-spinner *ngIf="loading"></mat-spinner>
+  <div class="content" *ngIf="!loading">
+    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" *ngIf="clubs.length > 0 && !loading">
+
+      <!-- Position Column -->
+      <ng-container matColumnDef="Name_Club">
+        <th mat-header-cell *matHeaderCellDef> Назва клубу</th>
+        <td class="complaints__count" mat-cell *matCellDef="let element"
+            [routerLink]="['/club',element.Name_Club]"> {{element.Name_Club}}</td>
+      </ng-container>
+
+      <!-- Name Column -->
+      <ng-container matColumnDef="City">
+        <th mat-header-cell *matHeaderCellDef>Місто</th>
+        <td mat-cell *matCellDef="let element"> {{element.City}}  </td>
+      </ng-container>
+
+      <!-- Weight Column -->
+      <ng-container matColumnDef="Street">
+        <th mat-header-cell *matHeaderCellDef>Вулиця</th>
+        <td mat-cell *matCellDef="let element"> {{element.Street}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="Build">
+        <th mat-header-cell *matHeaderCellDef>Будівля</th>
+        <td mat-cell *matCellDef="let element"> {{element.Build}}</td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+    <div class="footer">
+      <button *ngIf="ADMIN || MEMBER" mat-button class="save__button" routerLink="/add-club">ДОДАТИ КЛУБ
+      </button>
+      <mat-paginator class="paginator" [pageSize]="10" [pageSizeOptions]="[5, 10, 20]"></mat-paginator>
+      <p class="info-text mat-body-2" *ngIf="clubs.length <= 0">Гравці відсутні</p>
+      <p class="info-text mat-body-2" *ngIf="loading">Loading...</p>
+    </div>
+  </div>
+</main>
