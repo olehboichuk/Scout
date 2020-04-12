@@ -86,6 +86,7 @@ export class PlayersComponent implements OnInit {
     this.filterForm = this.formBuilder.group({
       Positions: [''],
       Kicking_Leg: [''],
+      IsChecked:['']
     });
   }
 
@@ -97,12 +98,11 @@ export class PlayersComponent implements OnInit {
       Max_Age: this.maxValueAge,
       Positions: this.filterForm.get('Positions').value==''? null :this.filterForm.get('Positions').value,
       Kicking_Leg: this.filterForm.get('Kicking_Leg').value==''? null :this.filterForm.get('Kicking_Leg').value,
+      All_Club: this.filterForm.get('IsChecked').value==''? null : 1,
     };
-    console.log(filtersData);
     this.authService.doFilter(filtersData).subscribe(res => {
       // @ts-ignore
       this.users = res;
-      console.log(res);
       this.dataSource = new MatTableDataSource(this.users);
       this.dataSource.paginator = this.paginator;
       this.changeDetectorRefs.detectChanges();

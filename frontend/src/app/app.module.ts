@@ -35,6 +35,7 @@ import { AddClubComponent } from './add-club/add-club.component';
 import { AddTournamentComponent } from './add-tournament/add-tournament.component';
 import { TournamentComponent } from './tournament/tournament.component';
 import { TournamentsComponent } from './tournaments/tournaments.component';
+import {MatCheckboxModule} from "@angular/material/checkbox";
 
 @NgModule({
   declarations: [
@@ -76,6 +77,7 @@ import { TournamentsComponent } from './tournaments/tournaments.component';
     MatExpansionModule,
     FormsModule,
     Ng5SliderModule,
+    MatCheckboxModule,
   ],
   providers: [{
     provide: HTTP_INTERCEPTORS,

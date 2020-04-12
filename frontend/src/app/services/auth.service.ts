@@ -189,7 +189,7 @@ export class AuthService {
     return this.http.get(this.filtersURL);
   }
 
-  doFilter(filtersData: { Min_Age: number; Kicking_Leg: any; Min_Coast: number; Max_Coast: number; Positions: any; Max_Age: number }) {
+  doFilter(filtersData: { Min_Age: number; Kicking_Leg: any; Min_Coast: number; Max_Coast: number; Positions: any; Max_Age: number; All_Club: number}) {
     return this.http.post<{ players: PlayerWclubModel[] }>(this.filtersURL, filtersData);
   }
 

@@ -29,7 +29,31 @@ let getForwardSeasons = 'SELECT Season FROM statistics_season_forward WHERE Numb
 //CRUD Player
 let createPlayer = 'INSERT INTO player SET ?';
 let getAllPlayers = 'SELECT p.Number_Licenses, p.First_Name, p.Surname, p.Patronymic, p.Citizenship, p.Update_Date, p.Birthday, p.Age, p.Cost, p.Salary, p.Game_Experience, p.Height, p.Weight, p.Kicking_Leg, p.Agent_Name, p.Agent_Phone, (SELECT Name_Club FROM player_contract pc WHERE p.Number_Licenses=pc.Number_Licenses AND pc.Active=1) AS Name_Club, r.Position FROM player p LEFT JOIN role r on p.Number_Licenses = r.Number_Licenses';
-let getAllPlayersFilter = 'SELECT p.Number_Licenses, p.First_Name, p.Surname, p.Patronymic, p.Citizenship, p.Update_Date, p.Birthday, p.Age, p.Cost, p.Salary, p.Game_Experience, p.Height, p.Weight, p.Kicking_Leg, p.Agent_Name, p.Agent_Phone, (SELECT Name_Club FROM player_contract pc WHERE p.Number_Licenses=pc.Number_Licenses AND pc.Active=1) AS Name_Club, r.Position FROM player p LEFT JOIN role r on p.Number_Licenses = r.Number_Licenses WHERE p.Cost<=? AND p.Cost>=? AND p.Age<=? AND p.Age>=? AND ((? IS NOT NULL AND p.Kicking_Leg LIKE ?) OR ? IS NULL) AND ((? IS NOT NULL AND r.Position LIKE ?) OR ? IS NULL)';
+let getAllPlayersFilter = 'SELECT p.Number_Licenses,p.First_Name, p.Surname, p.Patronymic,p.Citizenship,p.Update_Date,p.Birthday,\n' +
+    '       p.Age,p.Cost,p.Salary,p.Game_Experience,p.Height,p.Weight,p.Kicking_Leg,p.Agent_Name,p.Agent_Phone,\n' +
+    '       (SELECT Name_Club\n' +
+    '        FROM player_contract pc\n' +
+    '        WHERE p.Number_Licenses = pc.Number_Licenses\n' +
+    '          AND pc.Active = 1) AS Name_Club,\n' +
+    '       r.Position\n' +
+    'FROM player p\n' +
+    '         LEFT JOIN role r on p.Number_Licenses = r.Number_Licenses\n' +
+    'WHERE p.Cost <= ?\n' +
+    '  AND p.Cost >= ?\n' +
+    '  AND p.Age <= ?\n' +
+    '  AND p.Age >= ?\n' +
+    '  AND ((? IS NOT NULL AND p.Kicking_Leg LIKE ?) OR ? IS NULL)\n' +
+    '  AND ((? IS NOT NULL AND r.Position LIKE ?) OR ? IS NULL)\n' +
+    '  AND ((? IS NOT NULL AND NOT EXISTS(SELECT *\n' +
+    '                                     FROM club c\n' +
+    '                                     WHERE c.Name_Club IN (SELECT pc.Name_Club\n' +
+    '                                                           FROM player_contract pc\n' +
+    '                                                           WHERE pc.Number_Licenses)\n' +
+    '                                       AND NOT EXISTS(SELECT *\n' +
+    '                                                      FROM player_contract pc\n' +
+    '                                                      WHERE p.Number_Licenses = pc.Number_Licenses\n' +
+    '                                                        AND pc.Name_Club = c.Name_Club)\n' +
+    '    )) OR ? IS NULL)';
 let getPlayerById = 'SELECT p.Number_Licenses, p.First_Name, p.Surname, p.Patronymic, p.Citizenship, p.Update_Date, p.Birthday, p.Age, p.Cost, p.Salary, p.Game_Experience, p.Height, p.Weight, p.Kicking_Leg, p.Agent_Name, p.Agent_Phone, (SELECT Name_Club FROM player_contract pc WHERE p.Number_Licenses=pc.Number_Licenses AND pc.Active=1) AS Name_Club, r.Position FROM player p LEFT JOIN role r on p.Number_Licenses = r.Number_Licenses WHERE  p.Number_Licenses=?';
 let updatePlayerById = 'UPDATE player SET ? WHERE Number_Licenses=?';
 let deletePlayerById = 'DELETE FROM player WHERE Number_Licenses=?';

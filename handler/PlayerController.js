@@ -337,7 +337,7 @@ router.route('/filters')
         });
     })
     .post((req, res) => {
-        db.query(sql.getAllPlayersFilter, [req.body.Max_Coast, req.body.Min_Coast, req.body.Max_Age, req.body.Min_Age, req.body.Kicking_Leg, req.body.Kicking_Leg, req.body.Kicking_Leg, req.body.Positions, req.body.Positions, req.body.Positions], (err, result) => {
+        db.query(sql.getAllPlayersFilter, [req.body.Max_Coast, req.body.Min_Coast, req.body.Max_Age, req.body.Min_Age, req.body.Kicking_Leg, req.body.Kicking_Leg, req.body.Kicking_Leg, req.body.Positions, req.body.Positions, req.body.Positions,req.body.All_Club,req.body.All_Club], (err, result) => {
             if (err) throw err;
             res.send(combinepLAYER(result));
         });
