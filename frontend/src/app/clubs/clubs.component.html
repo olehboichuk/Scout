@@ -34,7 +34,7 @@
       <button *ngIf="ADMIN || MEMBER" mat-button class="save__button" routerLink="/add-club">ДОДАТИ КЛУБ
       </button>
       <mat-paginator class="paginator" [pageSize]="10" [pageSizeOptions]="[5, 10, 20]"></mat-paginator>
-      <p class="info-text mat-body-2" *ngIf="clubs.length <= 0">Гравці відсутні</p>
+      <p class="info-text mat-body-2" *ngIf="clubs.length <= 0">Клуби відсутні</p>
       <p class="info-text mat-body-2" *ngIf="loading">Loading...</p>
     </div>
   </div>

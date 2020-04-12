@@ -672,6 +672,13 @@ export class DialogDelete {
         console.warn('no ok');
       });
     }
+    if (this.data.Name_Tournament){
+      this.authService.deleteTournament(this.data.Name_Tournament, this.data.Season).subscribe(res => {
+        this.router.navigate(['/tournaments']);
+      }, error => {
+        console.warn('no ok');
+      });
+    }
 
   }
 }
@@ -679,4 +686,6 @@ export class DialogDelete {
 export interface DialogData {
   Number_Licenses: string;
   Name_Club: string;
+  Season: string;
+  Name_Tournament: string;
 }

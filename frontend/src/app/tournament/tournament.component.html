@@ -1,1 +1,93 @@
-<p>tournament works!</p>
+<div class="content">
+  <mat-spinner *ngIf="loading"></mat-spinner>
+  <div class="profile" *ngIf="!loading">
+    <form (ngSubmit)="onSubmit()" [formGroup]="changeForm">
+      <div class="player">
+        <img class="img animated flipInY" src="../../assets/img/shield.png" alt="Club">
+        <p class="animated infinite bounce delay-2s" style="position: absolute;top: 300px;left: 262px;font-size: 22.3px;color: darkblue;text-transform: uppercase;">тут може бути ваша
+        <p class="animated infinite bounce delay-2s" style="position: absolute;top: 340px;left: 330px;font-size: 22.3px;color: darkblue;text-transform: uppercase;">реклама</p>
+        <div class="pl__btn">
+          <div class="player__info">
+            <div class="form__user">
+              <div *ngIf="edited" class="player__item">
+                <p class="player--text">Назва турніру:</p>
+                <p class="player__name">{{tournament.Name_Tournament}}</p>
+              </div>
+              <mat-form-field *ngIf="!edited" class="form__input">
+                <input matInput type="text" formControlName="Name_Tournament"
+                       placeholder="Назва турніру:" value="{{tournament.Name_Tournament}}"/>
+              </mat-form-field>
+              <div *ngIf="edited" class="player__item">
+                <p class="player--text">Сезон:</p>
+                <p class="player__name">{{tournament.Season}}</p>
+              </div>
+              <mat-form-field *ngIf="!edited" class="form__input">
+                <input matInput type="text" formControlName="Season"
+                       placeholder="Сезон:" value="{{tournament.Season}}"/>
+              </mat-form-field>
+              <div *ngIf="edited" class="player__item">
+                <p class="player--text">Кількість команд:</p>
+                <p class="player__name">{{tournament.Number_Of_Teams}}</p>
+              </div>
+              <mat-form-field *ngIf="!edited" class="form__input">
+                <input matInput type="number" min="0" formControlName="Number_Of_Teams"
+                       placeholder="Кількість команд:"/>
+              </mat-form-field>
+              <div *ngIf="edited" class="player__item">
+                <p class="player--text">Область:</p>
+                <p class="player__name">{{tournament.Area}}</p>
+              </div>
+              <mat-form-field *ngIf="!edited" class="form__input">
+                <input matInput type="text" formControlName="Area"
+                       placeholder="Область:"/>
+              </mat-form-field>
+              <button mat-raised-button *ngIf="!edited" [disabled]="!changeForm.valid" class="save__button" disabled
+                      type="submit">
+                <p *ngIf="!loading">SAVE</p>
+                <img *ngIf="loading"
+                     src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA=="/>
+              </button>
+            </div>
+            <div class="form__user">
+              <div *ngIf="edited" class="player__item">
+                <p class="player--text">Переможець:</p>
+                <p class="player__name">{{tournament.Winner}}</p>
+              </div>
+              <mat-form-field *ngIf="!edited" class="form__input">
+                <input matInput type="text" formControlName="Winner"
+                       placeholder="Переможець:"/>
+              </mat-form-field>
+              <div *ngIf="edited" class="player__item">
+                <p class="player--text">Команда піднявшась:</p>
+                <p class="player__name">{{tournament.Team_Up_League}}</p>
+              </div>
+              <mat-form-field *ngIf="!edited" class="form__input">
+                <input matInput type="text" formControlName="Team_Up_League"
+                       placeholder="Команда піднявшась:" />
+              </mat-form-field>
+              <div *ngIf="edited" class="player__item">
+                <p class="player--text">Команда вилетівша:</p>
+                <p class="player__name">{{tournament.Team_Down_League}}</p>
+              </div>
+              <mat-form-field *ngIf="!edited" class="form__input">
+                <input matInput type="text"  formControlName="Team_Down_League"
+                       placeholder="Команда вилетівша:" />
+              </mat-form-field>
+              <button *ngIf="!edited" class="cancel__button" mat-raised-button (click)="onCancel()" type="button">
+                CANCEL
+              </button>
+            </div>
+          </div>
+          <div class="edit_del">
+            <button *ngIf="edited && MEMBER" class="edit__button" mat-raised-button (click)="onEdit()" type="button">
+              EDIT CLUB
+            </button>
+            <button *ngIf="edited && ADMIN" class="cancel__button" mat-raised-button (click)="openDialog()"
+                    type="button">DELETE CLUB
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

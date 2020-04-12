@@ -24,31 +24,30 @@ router.route('/tournament')
         console.log(req.body);
         db.query(sql.createTournament, req.body, (err, result) => {
             if (err) throw err;
-            res.sendStatus(200);
+            res.send(result);
         });
     });
 
 //Tournament API---------------------------------Tournament API------------------------------Tournament API
-router.route('/tournament/:name')
+router.route('/tournament/:name/:season')
     .get((req, res) => {
-        db.query(sql.getTournamentById, req.params.name, (err, result) => {
+        db.query(sql.getTournamentById, [req.params.name,req.params.season], (err, result) => {
             if (err) throw err;
             res.send(result);
-            res.sendStatus(200);
         });
     })
     .put((req, res) => {
         console.log(req.body);
-        db.query(sql.updateTournamentById, [req.body, req.params.name], (err, result) => {
+        db.query(sql.updateTournamentById, [req.body, req.params.name,req.params.season], (err, result) => {
             if (err) throw err;
-            res.sendStatus(200);
+            res.send(result);
         });
     })
     .delete((req, res) => {
         console.log(req.params.name);
-        db.query(sql.deleteTournamentById, req.params.name, (err, result) => {
+        db.query(sql.deleteTournamentById, [req.params.name,req.params.season], (err, result) => {
             if (err) throw err;
-            res.sendStatus(200);
+            res.send(result);
         });
     });
 

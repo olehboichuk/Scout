@@ -49,9 +49,9 @@ let deleteClubById = 'DELETE FROM club WHERE Name_Club=?';
 //CRUD Tournament
 let createTournament = 'INSERT INTO tournament SET ?';
 let getAllTournaments = 'SELECT * FROM tournament';
-let getTournamentById = 'SELECT * FROM tournament WHERE Name_Tournament=?';
-let updateTournamentById = 'UPDATE tournament SET ? WHERE Name_Tournament=?';
-let deleteTournamentById = 'DELETE FROM tournament WHERE Name_Tournament=?';
+let getTournamentById = 'SELECT * FROM tournament WHERE Name_Tournament=? AND Season=?';
+let updateTournamentById = 'UPDATE tournament SET ? WHERE Name_Tournament=? AND Season=?';
+let deleteTournamentById = 'DELETE FROM tournament WHERE Name_Tournament=? AND Season=?';
 //CRUD User
 let createUser = 'INSERT INTO users SET Login=?,Email=?,Password=?,First_name=?,Last_name=?';
 let getAllUsers = 'SELECT * FROM users';
