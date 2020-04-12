@@ -4,8 +4,12 @@
     <form (ngSubmit)="onSubmit()" [formGroup]="changeForm">
       <div class="player">
         <img class="img animated flipInY" src="../../assets/img/shield.png" alt="Club">
-        <p class="animated infinite bounce delay-2s" style="position: absolute;top: 300px;left: 262px;font-size: 22.3px;color: darkblue;text-transform: uppercase;">тут може бути ваша
-        <p class="animated infinite bounce delay-2s" style="position: absolute;top: 340px;left: 330px;font-size: 22.3px;color: darkblue;text-transform: uppercase;">реклама</p>
+        <p class="animated infinite bounce delay-2s"
+           style="position: absolute;top: 300px;left: 262px;font-size: 22.3px;color: darkblue;text-transform: uppercase;">
+          тут може бути ваша
+        <p class="animated infinite bounce delay-2s"
+           style="position: absolute;top: 340px;left: 330px;font-size: 22.3px;color: darkblue;text-transform: uppercase;">
+          реклама</p>
         <div class="pl__btn">
           <div class="player__info">
             <div class="form__user">
@@ -64,10 +68,10 @@
                 <p class="player__name">{{tournament.Team_Up_League}}</p>
               </div>
               <mat-form-field class="form__input" *ngIf="!edited">
-              <mat-select placeholder="Команда піднявшась:" formControlName="Team_Up_League">
-                <mat-option>None</mat-option>
-                <mat-option *ngFor=" let club of clubNames" value="{{club.Name_Club}}">{{club.Name_Club}}</mat-option>
-              </mat-select>
+                <mat-select placeholder="Команда піднявшась:" formControlName="Team_Up_League">
+                  <mat-option>None</mat-option>
+                  <mat-option *ngFor=" let club of clubNames" value="{{club.Name_Club}}">{{club.Name_Club}}</mat-option>
+                </mat-select>
               </mat-form-field>
               <div *ngIf="edited" class="player__item">
                 <p class="player--text">Команда вилетівша:</p>
@@ -95,5 +99,66 @@
         </div>
       </div>
     </form>
+    <table style="width: 100%;" mat-table [dataSource]="dataSource" class="mat-elevation-z8"
+           *ngIf="clubNames.length > 0 && !loading">
+
+      <!-- Position Column -->
+      <ng-container matColumnDef="Name_Club">
+        <th mat-header-cell *matHeaderCellDef> Назва клубу</th>
+        <td class="complaints__count" mat-cell *matCellDef="let element"
+            [routerLink]="['/club',element.Name_Club]"> {{element.Name_Club}}</td>
+      </ng-container>
+
+      <!-- Name Column -->
+      <ng-container matColumnDef="City">
+        <th mat-header-cell *matHeaderCellDef>Місто</th>
+        <td mat-cell *matCellDef="let element"> {{element.City}}  </td>
+      </ng-container>
+
+      <!-- Weight Column -->
+      <ng-container matColumnDef="Place_On_Tournament">
+        <th mat-header-cell *matHeaderCellDef>Місце</th>
+        <td mat-cell *matCellDef="let element"> {{element.Place_On_Tournament}}</td>
+      </ng-container><!-- Weight Column --><!-- Weight Column -->
+
+      <ng-container matColumnDef="Delete">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let element">
+          <button style="width: 35%;" *ngIf="edited && ADMIN" class="cancel__button" mat-raised-button
+                  (click)="onDelete(element)"
+                  type="button">DELETE CLUB
+          </button>
+        </td>
+      </ng-container><!-- Weight Column -->
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+    <div class="footer">
+      <p class="info-text mat-body-2" *ngIf="clubNames.length <= 0">Клуби відсутні</p>
+      <mat-paginator class="paginator" [pageSize]="10" [pageSizeOptions]="[5, 10, 20]"></mat-paginator>
+      <p class="info-text mat-body-2" *ngIf="loading">Loading...</p>
+      <button *ngIf="(ADMIN || MEMBER)&&!addingClub" mat-button class="save__button" (click)="addClub()">ДОДАТИ КЛУБ
+      </button>
+    </div>
+    <form style="width: 100%; display: flex; justify-content: space-around;" (ngSubmit)="onSubmitAdd()"
+          [formGroup]="addClubForm" class="addClub" *ngIf="addingClub">
+      <mat-form-field class="form__input">
+        <mat-select placeholder="Клуб" formControlName="Name_Club">
+          <mat-option *ngFor=" let club of clubs" value="{{club.Name_Club}}">{{club.Name_Club}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field class="form__input">
+        <input matInput type="number" min="0" max="48" formControlName="Place_On_Tournament"
+               placeholder="Місце:"/>
+      </mat-form-field>
+      <button mat-raised-button [disabled]="!addClubForm.valid" class="save__button" disabled
+              type="submit">SAVE
+      </button>
+      <button class="cancel__button" mat-raised-button (click)="onCancel()" type="button">
+        CANCEL
+      </button>
+    </form>
+    <mat-error *ngIf="addError" class="error">{{addError}}</mat-error>
   </div>
 </div>

@@ -165,6 +165,8 @@ export class PlayerComponent implements OnInit {
           if (this.player.Position != null && this.player.Position[5] != null) {
             // @ts-ignore
             this.selectedPosition = this.player.Position;
+            // @ts-ignore
+            this.addStatsPorition = this.player.Position;
             this.onSelectPosition();
             this.changeForm.controls['Position'].setValue([this.player.Position]);
           } else {

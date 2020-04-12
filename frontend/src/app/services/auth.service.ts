@@ -15,6 +15,7 @@ import {GoalkeeperModel} from "../models/goalkeeper.model";
 import {HalfbackModel} from "../models/halfback.model";
 import {ClubModel} from "../models/club.model";
 import {TournamentModel} from "../models/tournament.model";
+import {ClubTournamentModel} from "../models/clubTournament.model";
 
 @Injectable({
   providedIn: 'root'
@@ -46,7 +47,8 @@ export class AuthService {
   private deleteStatsGoalkeeperURL = 'http://localhost:3000/api/player/stats/goalkeeper/delete';
   private tournamentsURL = 'http://localhost:3000/api/tournament';
   private tournamentClubsURL = 'http://localhost:3000/api/tournament/clubs';
-
+  private clubTournamentURL = 'http://localhost:3000/api/tournament/club';
+  private deleteClubTournamentURL = 'http://localhost:3000/api/tournament/club/delete';
 
   constructor(private http: HttpClient, private router: Router) {
   }
@@ -230,5 +232,13 @@ export class AuthService {
 
   getTournamentClubs(tour: { Tournament_Name: string, Season: string }) {
     return this.http.post(this.tournamentClubsURL, tour);
+  }
+
+  addClubTournament(clubTournament: ClubTournamentModel) {
+    return this.http.post(this.clubTournamentURL, clubTournament);
+  }
+
+  deleteClubTournament(clubTournament: ClubTournamentModel) {
+    return this.http.post(this.deleteClubTournamentURL, clubTournament);
   }
 }

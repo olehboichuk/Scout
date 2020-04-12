@@ -68,6 +68,7 @@ export class PlayersComponent implements OnInit {
           }
         }
       };
+      this.loading = false;
     });
     if (localStorage.getItem("role") == "ADMIN") {
       this.ADMIN = true;
@@ -80,7 +81,7 @@ export class PlayersComponent implements OnInit {
       this.users = usersData;
       this.dataSource = new MatTableDataSource(this.users);
       this.dataSource.paginator = this.paginator;
-      this.loading = false;
+
     });
     this.filterForm = this.formBuilder.group({
       Positions: [''],

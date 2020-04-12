@@ -58,6 +58,23 @@ router.route('/tournament/clubs')
             res.send(result);
         });
     });
+router.route('/tournament/club')
+    .post((req, res) => {
+        db.query(sql.addClubTournament, req.body, (err, result) => {
+            if (err) return res.status(500).send("Цей клуб вже в турнірі!!!.");
+            if (err) throw err;
+            res.send(result);
+        });
+    });
+router.route('/tournament/club/delete')
+    .post((req, res) => {
+        console.log(req.body);
+        db.query(sql.deleteClubTournament, [req.body.Name_Tournament,req.body.Season,req.body.Name_Club], (err, result) => {
+            if (err) return res.status(500).send("Цей клуб вже в турнірі!!!.");
+            if (err) throw err;
+            res.send(result);
+        });
+    });
 
 
 module.exports = router;

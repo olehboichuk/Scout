@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {ChangeDetectorRef, Component, OnInit, ViewChild} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {ClubModel} from "../models/club.model";
 import {PlayerWclubModel} from "../models/playerWclub.model";
@@ -7,6 +7,9 @@ import {AuthService} from "../services/auth.service";
 import {ActivatedRoute, ParamMap, Router} from "@angular/router";
 import {TournamentModel} from "../models/tournament.model";
 import {DialogDelete} from "../player/player.component";
+import {MatTableDataSource} from "@angular/material/table";
+import {MatPaginator} from "@angular/material/paginator";
+import {ClubTournamentModel} from "../models/clubTournament.model";
 
 @Component({
   selector: 'app-tournament',
@@ -17,18 +20,27 @@ export class TournamentComponent implements OnInit {
   private ADMIN = false;
   private MEMBER = false;
   private changeForm: FormGroup;
+  private addClubForm: FormGroup;
   public loading = true;
   public tournament: TournamentModel;
   private edited = true;
+  private addingClub = false;
   private tournament_Name: string;
   private tournament_Season: string;
   private clubNames: any;
+  private dataSource: any;
+  private clubs: any;
+  private displayedColumns: string[] = ['Name_Club', 'City', 'Place_On_Tournament', 'Delete'];
+  @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
+  private addError: string;
 
-  constructor(private formBuilder: FormBuilder, public dialog: MatDialog, private authService: AuthService, public route: ActivatedRoute, private router: Router) {
+  constructor(private formBuilder: FormBuilder, public dialog: MatDialog, private authService: AuthService, public route: ActivatedRoute, private router: Router,private changeDetectorRefs: ChangeDetectorRef) {
   }
 
   ngOnInit() {
+    this.addError = '';
     this.loading = true;
+    this.addingClub = false;
     this.edited = true;
     if (localStorage.getItem("role") == "ADMIN") {
       this.ADMIN = true;
@@ -45,6 +57,10 @@ export class TournamentComponent implements OnInit {
       Team_Up_League: [''],
       Team_Down_League: [''],
     });
+    this.addClubForm = this.formBuilder.group({
+      Name_Club: ['', Validators.required],
+      Place_On_Tournament: ['', Validators.required]
+    });
     this.route.paramMap.subscribe((paramMap: ParamMap) => {
       if (paramMap.has('name') && paramMap.has('season')) {
         this.tournament_Name = paramMap.get('name');
@@ -55,11 +71,16 @@ export class TournamentComponent implements OnInit {
         this.loading = false;
       })
     });
+    this.authService.getAllClubsNames().subscribe(res=>{
+      this.clubs = res;
+    });
     this.authService.getTournamentClubs({
       Tournament_Name: this.tournament_Name,
       Season: this.tournament_Season
     }).subscribe(res => {
       this.clubNames = res;
+      this.dataSource = new MatTableDataSource(this.clubNames);
+      this.dataSource.paginator = this.paginator;
     });
   }
 
@@ -77,8 +98,10 @@ export class TournamentComponent implements OnInit {
   }
 
   onCancel() {
+    this.addingClub = false;
     this.onEdit();
     this.edited = true;
+    this.addError = '';
   }
 
   onSubmit() {
@@ -117,6 +140,68 @@ export class TournamentComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
+    });
+  }
+
+  addClub() {
+    this.addingClub = true;
+  }
+
+  onSubmitAdd() {
+    this.addingClub= false;
+    this.addError = '';
+    const clubTournament = <ClubTournamentModel>{
+      Name_Club: this.addClubForm.get('Name_Club').value,
+      Season: this.tournament.Season,
+      Name_Tournament: this.tournament.Name_Tournament,
+      Place_On_Tournament: this.addClubForm.get('Place_On_Tournament').value,
+    };
+    console.log(this.clubNames);
+    this.clubNames.forEach(elem=>{
+      if(elem.Name_Club==this.addClubForm.get('Name_Club').value){
+        this.addError = 'Цей клуб вже в турнірі!!!';
+      }
+    });
+    if(!this.addError){
+      this.authService.addClubTournament(clubTournament).subscribe(res=>{
+        this.authService.getTournamentClubs({
+          Tournament_Name: this.tournament_Name,
+          Season: this.tournament_Season
+        }).subscribe(res => {
+          this.clubNames = res;
+          this.dataSource = new MatTableDataSource(this.clubNames);
+          this.dataSource.paginator = this.paginator;
+          this.changeDetectorRefs.detectChanges();
+        });
+
+      },error => {
+
+      });
+    }
+
+  }
+
+  onEditClub(element: any) {
+    console.log(element);
+  }
+
+  onDelete(element: any) {
+    const club = <ClubTournamentModel>{
+      Name_Club: element.Name_Club,
+      Season: this.tournament.Season,
+      Name_Tournament: this.tournament.Name_Tournament,
+    };
+    this.authService.deleteClubTournament(club).subscribe(res=>{
+      console.log(res);
+      this.authService.getTournamentClubs({
+        Tournament_Name: this.tournament_Name,
+        Season: this.tournament_Season
+      }).subscribe(res => {
+        this.clubNames = res;
+        this.dataSource = new MatTableDataSource(this.clubNames);
+        this.dataSource.paginator = this.paginator;
+        this.changeDetectorRefs.detectChanges();
+      });
     });
   }
 }

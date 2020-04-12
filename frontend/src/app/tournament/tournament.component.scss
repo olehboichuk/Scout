@@ -22,7 +22,7 @@ $header_text_color2: #74b9ff;
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  overflow-y: auto;
+  overflow-y: scroll;
   background: $form_color;
 }
 

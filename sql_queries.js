@@ -48,8 +48,10 @@ let updateClubById = 'UPDATE club SET ? WHERE Name_Club = ?';
 let deleteClubById = 'DELETE FROM club WHERE Name_Club=?';
 //CRUD Tournament
 let createTournament = 'INSERT INTO tournament SET ?';
+let addClubTournament = 'INSERT INTO club_tournament SET ?';
+let deleteClubTournament = 'DELETE FROM club_tournament WHERE Name_Tournament=? AND Season=? AND Name_Club=?';
 let getAllTournaments = 'SELECT * FROM tournament';
-let getTournamentClubs = 'SELECT c.Name_Club FROM club c INNER JOIN club_tournament ct on c.Name_Club = ct.Name_Club INNER JOIN tournament t on ct.Name_Tournament = t.Name_Tournament AND ct.Season = t.Season WHERE t.Season=? AND t.Name_Tournament=?';
+let getTournamentClubs = 'SELECT c.Name_Club, c.City, ct.Place_On_Tournament FROM club c INNER JOIN club_tournament ct on c.Name_Club = ct.Name_Club INNER JOIN tournament t on ct.Name_Tournament = t.Name_Tournament AND ct.Season = t.Season WHERE t.Season=? AND t.Name_Tournament=?';
 let getTournamentById = 'SELECT * FROM tournament WHERE Name_Tournament=? AND Season=?';
 let updateTournamentById = 'UPDATE tournament SET ? WHERE Name_Tournament=? AND Season=?';
 let deleteTournamentById = 'DELETE FROM tournament WHERE Name_Tournament=? AND Season=?';
@@ -71,7 +73,7 @@ let getGoalkeeperStatics = 'SELECT * FROM statistics_season_goalkeeper WHERE Num
 
 let filterOn = 'SELECT MAX(Cost) AS Coast_Max, MAX(Age) AS Age_Max, MIN(Age) AS Age_Min FROM player';
 
-module.exports = {getTournamentClubs,
+module.exports = {getTournamentClubs,addClubTournament,deleteClubTournament,
     filterOn,
     getAllPlayersFilter,
     updateGoalkeeperStats,

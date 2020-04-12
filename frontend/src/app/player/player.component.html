@@ -187,7 +187,8 @@
         </div>
       </div>
       <div *ngFor="let club of clubs; let i = index">
-        <form class="clubs" (ngSubmit)="onUpdateContract(i)" [formGroup]="editContractForm">
+
+        <form *ngIf="clubs[0].Active!=null" class="clubs" (ngSubmit)="onUpdateContract(i)" [formGroup]="editContractForm">
           <div class="club__heder">
           <span class="material-icons" *ngIf="numEdited!=i && club.Active==0">
           label_outlined
@@ -313,8 +314,7 @@
           </button>
         </div>
       </div>
-      <p
-        *ngIf="addStats && (positionSelected || (player.Position == null ? false : player.Position[0].length == 1)) && seasons.length==0"
+      <p *ngIf="addStats && (positionSelected || (player.Position == null ? false : player.Position[0].length == 1)) && seasons.length==0"
         class="stats--header">статистика за обраними критеріями відсутня</p>
       <table mat-table *ngIf="addStats && selectedSeason && selectedPosition=='Forward'" [dataSource]="dataSource"
              class="mat-elevation-z8">
@@ -502,7 +502,7 @@
           ДОДАТИ СТАТИСТИКУ
         </button>
       </div>
-      <mat-form-field class="form__input" *ngIf="!addStats && !editStats">
+      <mat-form-field class="form__input" *ngIf="!addStats && !editStats && (player.Position == null ? false : player.Position[0].length > 1)">
         <mat-select placeholder="Оберіть позицію" [(ngModel)]="addStatsPorition">
           <mat-option *ngFor="let pos of player.Position" [value]="pos">{{pos}}</mat-option>
         </mat-select>
