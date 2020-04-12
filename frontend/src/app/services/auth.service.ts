@@ -49,6 +49,9 @@ export class AuthService {
   private tournamentClubsURL = 'http://localhost:3000/api/tournament/clubs';
   private clubTournamentURL = 'http://localhost:3000/api/tournament/club';
   private deleteClubTournamentURL = 'http://localhost:3000/api/tournament/club/delete';
+  private getClubPlayersURL = 'http://localhost:3000/api/club/players/';
+  private getClubStatsURL = 'http://localhost:3000/api/club/stats/';
+  private getClubCountTournamentURL = 'http://localhost:3000/api/club/tournament/count/';
 
   constructor(private http: HttpClient, private router: Router) {
   }
@@ -240,5 +243,17 @@ export class AuthService {
 
   deleteClubTournament(clubTournament: ClubTournamentModel) {
     return this.http.post(this.deleteClubTournamentURL, clubTournament);
+  }
+
+  getClubPlayers(Name_Club: string) {
+    return this.http.get<{ players: PlayerWclubModel[] }>(this.getClubPlayersURL + Name_Club);
+  }
+
+  getClubStats(Name_Club: string) {
+    return this.http.get(this.getClubStatsURL + Name_Club);
+  }
+
+  getClubCountTournament(Name_Club: string) {
+    return this.http.get(this.getClubCountTournamentURL + Name_Club);
   }
 }

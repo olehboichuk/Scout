@@ -26,6 +26,15 @@ $header_text_color2: #74b9ff;
   background: $form_color;
 }
 
+.stats{
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  width: 100%;
+  margin-top: 5%;
+  margin-left: 2%;
+}
+
 form {
   margin-bottom: 10px;
 }

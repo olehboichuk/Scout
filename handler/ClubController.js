@@ -59,6 +59,30 @@ function combineClub(arr) {
     });
 }
 
+function combinePlayer(arr) {
+    let combined = arr.reduce(function (result, item) {
+        let telephones = [];
+        let current = result[item['Number_Licenses']];
+        if (current) {
+            telephones.push(current['Position']);
+            telephones.push(item['Position']);
+        }
+        result[item['Number_Licenses']] = !current ? item : {
+            Number_Licenses: item['Number_Licenses'],
+            First_Name: current['First_Name'],
+            Surname: current['Surname'],
+            Citizenship: current['Citizenship'],
+            Cost: current['Cost'],
+            Salary: current['Salary'],
+            Position: telephones.flat(10)
+        };
+        return result;
+    }, {});
+    return Object.keys(combined).map(function (key) {
+        return combined[key];
+    });
+}
+
 //CLUB API---------------------------------CLUB API------------------------------CLUB API
 router.route('/club/:name')
     .get((req, res) => {
@@ -77,6 +101,29 @@ router.route('/club/:name')
     })
     .delete((req, res) => {
         db.query(sql.deleteClubById, req.params.name, (err, result) => {
+            if (err) throw err;
+            res.send(result);
+        });
+    });
+
+router.route('/club/players/:name')
+    .get((req, res) => {
+        db.query(sql.getClubPlayers, req.params.name, (err, result) => {
+            if (err) throw err;
+            res.send(combinePlayer(result));
+        });
+    });
+router.route('/club/stats/:name')
+    .get((req, res) => {
+        db.query(sql.getClubStats, req.params.name, (err, result) => {
+            if (err) throw err;
+            res.send(result);
+        });
+    });
+
+router.route('/club/tournament/count/:name')
+    .get((req, res) => {
+        db.query(sql.getClubCountTournament, req.params.name, (err, result) => {
             if (err) throw err;
             res.send(result);
         });

@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {ClubModel} from "../models/club.model";
 import {PlayerWclubModel} from "../models/playerWclub.model";
@@ -6,6 +6,8 @@ import {AuthService} from "../services/auth.service";
 import {ActivatedRoute, ParamMap, Router} from "@angular/router";
 import {DialogDelete} from "../player/player.component";
 import {MatDialog} from "@angular/material/dialog";
+import {MatPaginator} from "@angular/material/paginator";
+import {MatTableDataSource} from "@angular/material/table";
 
 @Component({
   selector: 'app-club',
@@ -19,8 +21,13 @@ export class ClubComponent implements OnInit {
   public loading = true;
   public club: ClubModel;
   private edited = true;
-  public players: PlayerWclubModel[];
+  public players: any;
   private clubName: string;
+  private stats: any;
+  private clubCountTournament: any;
+  private dataSource: any;
+  private displayedColumns: string[] = ['Name', 'Citizenship', 'Cost', 'Salary', 'Position'];
+  @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
 
   constructor(private formBuilder: FormBuilder, public dialog: MatDialog, private authService: AuthService, public route: ActivatedRoute, private router: Router) {
   }
@@ -46,7 +53,22 @@ export class ClubComponent implements OnInit {
       }
       this.authService.getClub(this.clubName).subscribe(res => {
         this.club = res[0];
-        this.loading = false;
+
+        console.log(this.clubName);
+        this.authService.getClubPlayers(this.clubName).subscribe(res => {
+          this.players = res;
+          this.dataSource = new MatTableDataSource(this.players);
+          this.dataSource.paginator = this.paginator;
+          this.authService.getClubStats(this.clubName).subscribe(res => {
+            this.stats = res[0];
+            console.log(this.stats);
+            this.authService.getClubCountTournament(this.clubName).subscribe(res=>{
+              this.clubCountTournament = res[0];
+              console.log(this.clubCountTournament);
+              this.loading = false;
+            });
+          });
+        });
       })
     });
   }
@@ -77,11 +99,11 @@ export class ClubComponent implements OnInit {
     };
     this.loading = true;
     this.authService.updateClub(club, this.club.Name_Club).subscribe(res => {
-      if(this.club.Name_Club!=this.changeForm.get('Name_Club').value){
+      if (this.club.Name_Club != this.changeForm.get('Name_Club').value) {
         this.edited = true;
         this.loading = false;
         this.router.navigate(['/club/', this.changeForm.get('Name_Club').value]);
-      }else {
+      } else {
         this.ngOnInit();
       }
     });
