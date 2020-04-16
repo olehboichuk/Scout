@@ -60,7 +60,7 @@
               </mat-form-field>
               <div *ngIf="edited" class="player__item">
                 <p class="player--text">Команда піднявшась:</p>
-                <p class="player__name">{{tournament.Team_Up_League}}</p>
+                <p class="player__name">{{tournament.Team_Up_League?tournament.Team_Up_League:'-'}}</p>
               </div>
               <mat-form-field class="form__input" *ngIf="!edited">
                 <mat-select placeholder="Команда піднявшась:" formControlName="Team_Up_League">
@@ -70,7 +70,7 @@
               </mat-form-field>
               <div *ngIf="edited" class="player__item">
                 <p class="player--text">Команда вилетівша:</p>
-                <p class="player__name">{{tournament.Team_Down_League}}</p>
+                <p class="player__name">{{tournament.Team_Down_League?tournament.Team_Down_League:'-'}}</p>
               </div>
               <mat-form-field class="form__input" *ngIf="!edited">
                 <mat-select placeholder="Команда вилетівша:" formControlName="Team_Down_League">
@@ -119,7 +119,7 @@
       <ng-container matColumnDef="Delete">
         <th mat-header-cell *matHeaderCellDef></th>
         <td mat-cell *matCellDef="let element">
-          <button style="width: 35%;" *ngIf="edited && ADMIN" class="cancel__button" mat-raised-button
+          <button style="width: 35%;" *ngIf="edited && (ADMIN || MEMBER)" class="cancel__button" mat-raised-button
                   (click)="onDelete(element)"
                   type="button">DELETE CLUB
           </button>

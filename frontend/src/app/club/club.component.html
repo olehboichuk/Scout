@@ -4,8 +4,8 @@
     <form (ngSubmit)="onSubmit()" [formGroup]="changeForm">
       <div class="player">
         <img class="img animated flipInY" src="../../assets/img/shield.png" alt="Club">
-        <p class="animated infinite bounce delay-2s" style="position: absolute;top: 300px;left: 262px;font-size: 22.3px;color: darkblue;text-transform: uppercase;">тут може бути ваша
-        <p class="animated infinite bounce delay-2s" style="position: absolute;top: 340px;left: 330px;font-size: 22.3px;color: darkblue;text-transform: uppercase;">реклама</p>
+<!--        <p class="animated infinite bounce delay-2s" style="position: absolute;top: 300px;left: 262px;font-size: 22.3px;color: darkblue;text-transform: uppercase;">тут може бути ваша-->
+<!--        <p class="animated infinite bounce delay-2s" style="position: absolute;top: 340px;left: 330px;font-size: 22.3px;color: darkblue;text-transform: uppercase;">реклама</p>-->
         <div class="pl__btn">
           <div class="player__info">
             <div class="form__user">
@@ -25,6 +25,19 @@
                 <input matInput type="text" formControlName="City"
                        placeholder="Місто:" value="{{club.City}}"/>
               </mat-form-field>
+<!--              <div *ngIf="club.Telephone!=null&&club.Telephone.length<5 && edited" class="player__item">-->
+<!--                <p class="player&#45;&#45;text">Телефони:</p>-->
+<!--                <p class="player__name" *ngFor="let tel of club.Telephone">{{tel}}</p>-->
+<!--              </div>-->
+<!--              <div *ngIf="club.Telephone!=null&&club.Telephone.length>5 && edited" class="player__item">-->
+<!--                <p class="player&#45;&#45;text">Телефон:</p>-->
+<!--                <p class="player__name">{{club.Telephone}}</p>-->
+<!--              </div>-->
+<!--              <mat-form-field *ngIf="club.Telephone!=null&&club.Telephone.length>5 &&!edited" class="form__input">-->
+<!--                <input matInput type="text" formControlName="Phone"-->
+<!--                       placeholder="Телефон:" value="{{club.Telephone}}"/>-->
+<!--              </mat-form-field>-->
+
               <button mat-raised-button *ngIf="!edited" [disabled]="!changeForm.valid" class="save__button" disabled
                       type="submit">
                 <p *ngIf="!loading">SAVE</p>

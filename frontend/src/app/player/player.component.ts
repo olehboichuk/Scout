@@ -12,6 +12,7 @@ import {DefenderModel} from "../models/defender.model";
 import {ForwardModel} from "../models/forward.model";
 import {GoalkeeperModel} from "../models/goalkeeper.model";
 import {HalfbackModel} from "../models/halfback.model";
+import {PrintService} from "../print.service";
 
 @Component({
   selector: 'app-player',
@@ -53,13 +54,29 @@ export class PlayerComponent implements OnInit {
   private addStatsPorition: string;
   private seazonError = '';
   private editStats = false;
+  private previousSeason = '';
 
 
-  constructor(public datepipe: DatePipe, public dialog: MatDialog, private formBuilder: FormBuilder, private authService: AuthService, public route: ActivatedRoute) {
+
+  constructor( private router: Router,public datepipe: DatePipe, public dialog: MatDialog, private formBuilder: FormBuilder, private authService: AuthService, public route: ActivatedRoute) {
+  }
+
+
+  printComponent(cmpName) {
+    let printContents = document.getElementById(cmpName).innerHTML;
+    let originalContents = document.body.innerHTML;
+
+    document.body.innerHTML = printContents;
+
+    window.print();
+    document.body.innerHTML = originalContents;
+    window.location.reload();
+
   }
 
   ngOnInit() {
     this.loading = true;
+    this.previousSeason = '';
     this.selectedSeason = '';
     this.selectedPosition = '';
     this.positionSelected = false;
@@ -413,7 +430,7 @@ export class PlayerComponent implements OnInit {
 
         });
       } else {
-        this.authService.updateDefender(defender).subscribe(res => {
+        this.authService.updateDefender(defender, this.previousSeason, this.player.Number_Licenses).subscribe(res => {
           console.log('success upd');
           this.ngOnInit();
         }, error => {
@@ -459,7 +476,7 @@ export class PlayerComponent implements OnInit {
 
         });
       } else {
-        this.authService.updateForward(forward).subscribe(res => {
+        this.authService.updateForward(forward, this.previousSeason, this.player.Number_Licenses).subscribe(res => {
           console.log('success upd');
           this.ngOnInit();
         }, error => {
@@ -505,7 +522,7 @@ export class PlayerComponent implements OnInit {
 
         });
       } else {
-        this.authService.updateGoalkeeper(goalkeeper).subscribe(res => {
+        this.authService.updateGoalkeeper(goalkeeper, this.previousSeason, this.player.Number_Licenses).subscribe(res => {
           console.log('success upd');
           this.ngOnInit();
         }, error => {
@@ -548,14 +565,12 @@ export class PlayerComponent implements OnInit {
           console.log('success added');
           this.ngOnInit();
         }, error => {
-
         });
       } else {
-        this.authService.updateHalfback(halfback).subscribe(res => {
+        this.authService.updateHalfback(halfback, this.previousSeason, this.player.Number_Licenses).subscribe(res => {
           console.log('success upd');
           this.ngOnInit();
         }, error => {
-
         });
       }
     }
@@ -566,6 +581,7 @@ export class PlayerComponent implements OnInit {
     this.editStats = true;
     if (this.selectedPosition == 'Forward') {
       this.addStatsPorition = 'Forward';
+      this.previousSeason = this.dataSource[0].Season;
       this.addStatsForward.controls['FSeason'].setValue(this.dataSource[0].Season);
       this.addStatsForward.controls['FNumber_Of_Matches'].setValue(this.dataSource[0].Number_Of_Matches);
       this.addStatsForward.controls['FNumber_Yellow_Cards'].setValue(this.dataSource[0].Number_Yellow_Cards);
@@ -579,6 +595,7 @@ export class PlayerComponent implements OnInit {
     }
     if (this.selectedPosition == 'Halfback') {
       this.addStatsPorition = 'Halfback';
+      this.previousSeason = this.dataSource[0].Season;
       this.addStatsHalfback.controls['HSeason'].setValue(this.dataSource[0].Season);
       this.addStatsHalfback.controls['HNumber_Of_Matches'].setValue(this.dataSource[0].Number_Of_Matches);
       this.addStatsHalfback.controls['HNumber_Yellow_Cards'].setValue(this.dataSource[0].Number_Yellow_Cards);
@@ -592,7 +609,7 @@ export class PlayerComponent implements OnInit {
     }
     if (this.selectedPosition == 'Defender') {
       this.addStatsPorition = 'Defender';
-      console.log(this.dataSource);
+      this.previousSeason = this.dataSource[0].Season;
       this.addStatsDefender.controls['DSeason'].setValue(this.dataSource[0].Season);
       this.addStatsDefender.controls['DNumber_Of_Matches'].setValue(this.dataSource[0].Number_Of_Matches);
       this.addStatsDefender.controls['DNumber_Yellow_Cards'].setValue(this.dataSource[0].Number_Yellow_Cards);
@@ -604,6 +621,7 @@ export class PlayerComponent implements OnInit {
     }
     if (this.selectedPosition == 'Goalkeeper') {
       this.addStatsPorition = 'Goalkeeper';
+      this.previousSeason = this.dataSource[0].Season;
       this.addStatsGoalkeeper.controls['GSeason'].setValue(this.dataSource[0].Season);
       this.addStatsGoalkeeper.controls['GNumber_Of_Matches'].setValue(this.dataSource[0].Number_Of_Matches);
       this.addStatsGoalkeeper.controls['GNumber_Yellow_Cards'].setValue(this.dataSource[0].Number_Yellow_Cards);
@@ -660,21 +678,21 @@ export class DialogDelete {
   }
 
   onNoClick(): void {
-    if (this.data.Name_Club){
+    if (this.data.Name_Club) {
       this.authService.deleteClub(this.data.Name_Club).subscribe(res => {
         this.router.navigate(['/clubs']);
       }, error => {
         console.warn('no ok');
       });
     }
-    if (this.data.Number_Licenses){
+    if (this.data.Number_Licenses) {
       this.authService.deletePlayer(this.data.Number_Licenses).subscribe(res => {
         this.router.navigate(['/players']);
       }, error => {
         console.warn('no ok');
       });
     }
-    if (this.data.Name_Tournament){
+    if (this.data.Name_Tournament) {
       this.authService.deleteTournament(this.data.Name_Tournament, this.data.Season).subscribe(res => {
         this.router.navigate(['/tournaments']);
       }, error => {

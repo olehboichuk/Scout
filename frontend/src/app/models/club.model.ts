@@ -3,4 +3,5 @@ export interface ClubModel {
   City: string;
   Street: string;
   Build: string;
+  Telephone: string[];
 }

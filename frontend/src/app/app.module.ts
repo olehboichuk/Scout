@@ -36,6 +36,8 @@ import { AddTournamentComponent } from './add-tournament/add-tournament.componen
 import { TournamentComponent } from './tournament/tournament.component';
 import { TournamentsComponent } from './tournaments/tournaments.component';
 import {MatCheckboxModule} from "@angular/material/checkbox";
+import { PrintComponent } from './print/print.component';
+import {PrintService} from "./print.service";
 
 @NgModule({
   declarations: [
@@ -52,7 +54,8 @@ import {MatCheckboxModule} from "@angular/material/checkbox";
     AddClubComponent,
     AddTournamentComponent,
     TournamentComponent,
-    TournamentsComponent
+    TournamentsComponent,
+    PrintComponent
   ],
   imports: [
     BrowserModule,
@@ -83,7 +86,7 @@ import {MatCheckboxModule} from "@angular/material/checkbox";
     provide: HTTP_INTERCEPTORS,
     useClass: AuthInterceptor,
     multi: true,
-  },DatePipe],
+  },DatePipe,PrintService],
   bootstrap: [AppComponent],
   entryComponents:[DialogDelete]
 })

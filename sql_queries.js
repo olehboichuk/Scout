@@ -16,10 +16,13 @@ let deleteDefenderStats = 'DELETE FROM statistics_season_defenders WHERE Number_
 let deleteHalfbackStats = 'DELETE FROM statistics_season_halfbacks WHERE Number_Licenses=?AND Season=?';
 let deleteForwardStats = 'DELETE FROM statistics_season_forward WHERE Number_Licenses=?AND Season=?';
 
-let updateGoalkeeperStats = 'UPDATE statistics_season_goalkeeper SET ?';
-let updateDefenderStats = 'UPDATE statistics_season_defenders SET ?';
-let updateHalfbackStats = 'UPDATE statistics_season_halfbacks SET ?';
-let updateForwardStats = 'UPDATE statistics_season_forward SET ?';
+let updateGoalkeeperStats = 'UPDATE statistics_season_goalkeeper SET ? WHERE Number_Licenses=? AND Season=?';
+let updateDefenderStats = 'UPDATE statistics_season_defenders SET ? WHERE Number_Licenses=? AND Season=?';
+let updateHalfbackStats = 'UPDATE statistics_season_halfbacks SET ? WHERE Number_Licenses=? AND Season=?';
+let updateForwardStats = 'UPDATE statistics_season_forward SET ? WHERE Number_Licenses=? AND Season=?';
+
+let updClubPhone = 'UPDATE phones SET Telephone=? WHERE Telephone=? AND  Name_Club=?';
+let addClubPhone = 'INSERT INTO phones SET Telephone=? AND Name_Club=?';
 
 let getGoalkeeperSeasons = 'SELECT Season FROM statistics_season_goalkeeper WHERE Number_Licenses = ?';
 let getDefenderSeasons = 'SELECT Season FROM statistics_season_defenders WHERE Number_Licenses = ?';
@@ -70,7 +73,9 @@ let getAllClubs = 'SELECT c.Name_Club, c.Build, c.City, c.Street, c.Street, p.Te
 let getClubByName = 'SELECT c.Name_Club, c.Build, c.City, c.Street, c.Street, p.Telephone FROM CLUB c LEFT JOIN phones p on c.Name_Club = p.Name_Club WHERE c.Name_Club = ?';
 let getClubPlayers = 'SELECT p.Number_Licenses, p.First_Name, p.Surname, p.Citizenship, p.Cost, p.Salary, r.Position FROM club c INNER JOIN player_contract pc on c.Name_Club = pc.Name_Club INNER JOIN player p on pc.Number_Licenses = p.Number_Licenses INNER JOIN role r on p.Number_Licenses = r.Number_Licenses WHERE c.Name_Club=? AND pc.Active LIKE 1';
 let getClubStats = 'SELECT c.Name_Club, IFNULL(SUM(ssf.Goals),0) + IFNULL(SUM(ssh.Goals),0) AS Goals FROM club c INNER JOIN player_contract pc ON c.Name_Club = pc.Name_Club LEFT JOIN statistics_season_forward ssf ON pc.Number_Licenses = ssf.Number_Licenses LEFT JOIN statistics_season_halfbacks ssh ON pc.Number_Licenses = ssh.Number_Licenses WHERE pc.Active LIKE 1 AND c.Name_Club=? GROUP BY c.Name_Club';
+let getClubPlayersStats = 'SELECT c.Name_Club, IFNULL(SUM(ssf.Goals),0) + IFNULL(SUM(ssh.Goals),0) AS Goals FROM club c INNER JOIN player_contract pc ON c.Name_Club = pc.Name_Club LEFT JOIN statistics_season_forward ssf ON pc.Number_Licenses = ssf.Number_Licenses LEFT JOIN statistics_season_halfbacks ssh ON pc.Number_Licenses = ssh.Number_Licenses WHERE pc.Active LIKE 1 GROUP BY c.Name_Club';
 let getClubCountTournament = 'SELECT COUNT(c2.Name_Club) AS Tournaments FROM club c2 INNER JOIN club_tournament ct on c2.Name_Club = ct.Name_Club WHERE c2.Name_Club =? GROUP BY c2.Name_Club';
+let getClubTournament = 'SELECT c2.Name_Club, COUNT(c2.Name_Club) AS Tournaments FROM club c2 INNER JOIN club_tournament ct on c2.Name_Club = ct.Name_Club GROUP BY c2.Name_Club';
 
 let updateClubById = 'UPDATE club SET ? WHERE Name_Club = ?';
 let deleteClubById = 'DELETE FROM club WHERE Name_Club=?';
@@ -101,7 +106,9 @@ let getGoalkeeperStatics = 'SELECT * FROM statistics_season_goalkeeper WHERE Num
 
 let filterOn = 'SELECT MAX(Cost) AS Coast_Max, MAX(Age) AS Age_Max, MIN(Age) AS Age_Min FROM player';
 
-module.exports = {getClubCountTournament,
+module.exports = {addClubPhone,getClubTournament,getClubPlayersStats,
+    updClubPhone,
+    getClubCountTournament,
     getTournamentClubs,
     addClubTournament,
     deleteClubTournament,

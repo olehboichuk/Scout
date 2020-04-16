@@ -11,8 +11,10 @@ import {MatTableDataSource} from "@angular/material/table";
   styleUrls: ['./clubs.component.scss']
 })
 export class ClubsComponent implements OnInit {
-  private displayedColumns: string[] = ['Name_Club', 'City', 'Street', 'Build'];
+  private displayedColumns: string[] = ['Name_Club', 'City', 'Street', 'Build', 'Goals', 'Tournaments'];
   private dataSource: any;
+  private clubTournaments: any;
+  private clubGoals: any;
   private loading = false;
   private clubs: ClubModel[] = [];
   private ADMIN = false;
@@ -31,12 +33,36 @@ export class ClubsComponent implements OnInit {
     if (localStorage.getItem("role") == "MEMBER")
       this.MEMBER = true;
     this.authService.getClubs().subscribe(clubsData => {
-      // @ts-ignore
-      this.clubs = clubsData;
-      this.dataSource = new MatTableDataSource(this.clubs);
-      this.dataSource.paginator = this.paginator;
-      this.loading = false;
+      this.authService.getdClubCountTournamentURL().subscribe(result => {
+        this.authService.getClubStat().subscribe(res => {
+          this.clubTournaments = result;
+          this.clubGoals = res;
+          // @ts-ignore
+          this.clubs = clubsData;
+          this.dataSource = new MatTableDataSource(this.clubs);
+          this.dataSource.paginator = this.paginator;
+          this.loading = false;
+        });
+      });
     });
   }
 
+  clubss(Name_Club: any) {
+    let res = '0';
+    this.clubTournaments.forEach(e=>{
+      if(e.Name_Club==Name_Club){
+        res = e.Tournaments;
+      }
+    });
+    return res;
+  }
+  goalss(Name_Club: any) {
+    let res = '0';
+    this.clubGoals.forEach(e=>{
+      if(e.Name_Club==Name_Club){
+        res = e.Goals;
+      }
+    });
+    return res;
+  }
 }

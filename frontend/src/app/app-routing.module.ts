@@ -11,6 +11,7 @@ import {AddClubComponent} from "./add-club/add-club.component";
 import {AddTournamentComponent} from "./add-tournament/add-tournament.component";
 import {TournamentComponent} from "./tournament/tournament.component";
 import {TournamentsComponent} from "./tournaments/tournaments.component";
+import {PrintComponent} from "./print/print.component";
 
 
 const routes: Routes = [
@@ -26,6 +27,13 @@ const routes: Routes = [
   {path: 'player/:id', component: PlayerComponent},
   {path: 'club/:name', component: ClubComponent},
   {path: 'tournament/:name/:season', component: TournamentComponent},
+  { path: 'print',
+    outlet: 'print',
+    component: PrintComponent,
+    children: [
+      { path: 'player/:id', component: PlayerComponent }
+    ]
+  }
 ];
 
 @NgModule({

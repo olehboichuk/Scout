@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {ClubModel} from "../models/club.model";
 import {PlayerWclubModel} from "../models/playerWclub.model";
@@ -15,7 +15,8 @@ export class AddClubComponent implements OnInit {
   public loading = false;
   public club: ClubModel;
 
-  constructor(private formBuilder: FormBuilder, private authService: AuthService, private router: Router) { }
+  constructor(private formBuilder: FormBuilder, private authService: AuthService, private router: Router) {
+  }
 
   ngOnInit() {
     this.changeForm = this.formBuilder.group({
@@ -32,12 +33,12 @@ export class AddClubComponent implements OnInit {
       Name_Club: this.changeForm.get('Name_Club').value,
       City: this.changeForm.get('City').value,
       Street: this.changeForm.get('Street').value,
-      Build: this.changeForm.get('Build').value,
+      Build: this.changeForm.get('Build').value
     };
     this.loading = true;
-    this.authService.addClub(club).subscribe(res=>{
+    this.authService.addClub(club).subscribe(res => {
       this.router.navigate(['/club/', this.changeForm.get('Name_Club').value]);
-    },error => {
+    }, error => {
       console.error(error);
       this.loading = false;
     });

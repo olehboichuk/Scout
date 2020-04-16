@@ -4,7 +4,6 @@ import {PlayerModel} from "../models/player.model";
 import {Authentificationrequest} from "../models/authentificationrequest";
 import {Token} from "../models/token";
 import {Router} from "@angular/router";
-import {FullPlayerModel} from "../models/fullPlayer.model";
 import {UserModel} from "../models/user.model";
 import {ContractModel} from "../models/contract.model";
 import {PlayerWclubModel} from "../models/playerWclub.model";
@@ -51,6 +50,8 @@ export class AuthService {
   private deleteClubTournamentURL = 'http://localhost:3000/api/tournament/club/delete';
   private getClubPlayersURL = 'http://localhost:3000/api/club/players/';
   private getClubStatsURL = 'http://localhost:3000/api/club/stats/';
+  private getClubGoalssURL = 'http://localhost:3000/api/goals/club';
+  private phoneURL = 'http://localhost:3000/api/club/phone/';
   private getClubCountTournamentURL = 'http://localhost:3000/api/club/tournament/count/';
 
   constructor(private http: HttpClient, private router: Router) {
@@ -169,20 +170,20 @@ export class AuthService {
     return this.http.post(this.deleteStatsGoalkeeperURL, stat);
   }
 
-  updateDefender(defender: DefenderModel) {
-    return this.http.put(this.addDefenderURL, defender);
+  updateDefender(defender: DefenderModel,Season: string,Number_Licenses: number) {
+    return this.http.put(this.addDefenderURL+'/'+ Season+'/'+Number_Licenses, defender);
   }
 
-  updateForward(forward: ForwardModel) {
-    return this.http.put(this.addForwardURL, forward);
+  updateForward(forward: ForwardModel,Season: string,Number_Licenses: number) {
+    return this.http.put(this.addForwardURL+'/'+ Season+'/'+Number_Licenses, forward);
   }
 
-  updateHalfback(halfback: HalfbackModel) {
-    return this.http.put(this.addHalfbackURL, halfback);
+  updateHalfback(halfback: HalfbackModel,Season: string,Number_Licenses: number) {
+    return this.http.put(this.addHalfbackURL+'/'+ Season+'/'+Number_Licenses, halfback);
   }
 
-  updateGoalkeeper(goalkeeper: GoalkeeperModel) {
-    return this.http.put(this.addGoalkeeperURL, goalkeeper);
+  updateGoalkeeper(goalkeeper: GoalkeeperModel,Season: string,Number_Licenses: number) {
+    return this.http.put(this.addGoalkeeperURL+'/'+ Season+'/'+Number_Licenses, goalkeeper);
   }
 
   getFilterData() {
@@ -255,5 +256,21 @@ export class AuthService {
 
   getClubCountTournament(Name_Club: string) {
     return this.http.get(this.getClubCountTournamentURL + Name_Club);
+  }
+
+  updatePhone(phone:{phone: number, prv: number}, Name_Club: string) {
+    return this.http.put(this.phoneURL + Name_Club, phone);
+  }
+
+  addPhone(param: { phone: any }, Name_Club: any) {
+    return this.http.post(this.phoneURL + Name_Club, param);
+  }
+
+  getdClubCountTournamentURL(){
+    return this.http.get(this.getClubCountTournamentURL);
+  }
+
+  getClubStat(){
+    return this.http.get(this.getClubGoalssURL);
   }
 }

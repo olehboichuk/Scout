@@ -26,6 +26,14 @@
         <th mat-header-cell *matHeaderCellDef>Будівля</th>
         <td mat-cell *matCellDef="let element"> {{element.Build}}</td>
       </ng-container>
+      <ng-container matColumnDef="Goals">
+        <th mat-header-cell *matHeaderCellDef>К-сть голів</th>
+        <td mat-cell *matCellDef="let element"> {{goalss(element.Name_Club)}}</td>
+      </ng-container>
+      <ng-container matColumnDef="Tournaments">
+        <th mat-header-cell *matHeaderCellDef>К-сть турнірів</th>
+          <td mat-cell *matCellDef="let element">{{clubss(element.Name_Club)}}</td>
+      </ng-container>
 
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>

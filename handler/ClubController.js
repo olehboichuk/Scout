@@ -88,12 +88,10 @@ router.route('/club/:name')
     .get((req, res) => {
         db.query(sql.getClubByName, req.params.name, (err, result) => {
             if (err) throw err;
-            res.send(result);
+            res.send(combineClub(result));
         });
     })
     .put((req, res) => {
-        console.log(req.body);
-        console.log(req.params.name);
         db.query(sql.updateClubById, [req.body, req.params.name], (err, result) => {
             if (err) throw err;
             res.send(result);
@@ -113,6 +111,7 @@ router.route('/club/players/:name')
             res.send(combinePlayer(result));
         });
     });
+
 router.route('/club/stats/:name')
     .get((req, res) => {
         db.query(sql.getClubStats, req.params.name, (err, result) => {
@@ -128,5 +127,35 @@ router.route('/club/tournament/count/:name')
             res.send(result);
         });
     });
+
+router.route('/club/tournament/count/')
+    .get((req, res) => {
+        db.query(sql.getClubTournament, (err, result) => {
+            if (err) throw err;
+            res.send(result);
+        });
+    });
+
+router.route('/goals/club')
+    .get((req, res) => {
+        db.query(sql.getClubPlayersStats, (err, result) => {
+            if (err) throw err;
+            res.send(result);
+        });
+    });
+
+router.route('/club/phone/:name')
+    .put((req, res) => {
+        db.query(sql.updClubPhone, [req.body.phone, req.body.prv, req.params.name], (err, result) => {
+            if (err) throw err;
+            res.send(result);
+        });
+    })
+    .post((req, res) => {
+    db.query(sql.addClubPhone, [req.body.phone, req.params.name], (err, result) => {
+        if (err) throw err;
+        res.send(result);
+    });
+});
 
 module.exports = router;

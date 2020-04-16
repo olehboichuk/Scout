@@ -255,9 +255,9 @@ router.route('/player/stats/defender')
             if (err) throw err;
             res.send(result);
         });
-    })
-    .put((req, res) => {
-        db.query(sql.updateDefenderStats, req.body, (err, result) => {
+    });
+router.route('/player/stats/defender/:season/:numb').put((req, res) => {
+        db.query(sql.updateDefenderStats, [req.body,req.params.numb,req.params.season], (err, result) => {
             if (err) throw err;
             res.send(result);
         });
@@ -268,8 +268,9 @@ router.route('/player/stats/forward')
             if (err) throw err;
             res.send(result);
         });
-    }).put((req, res) => {
-    db.query(sql.updateForwardStats, req.body, (err, result) => {
+    });
+router.route('/player/stats/forward/:season/:numb').put((req, res) => {
+    db.query(sql.updateForwardStats, [req.body,req.params.numb,req.params.season], (err, result) => {
         if (err) throw err;
         res.send(result);
     });
@@ -280,8 +281,9 @@ router.route('/player/stats/goalkeeper')
             if (err) throw err;
             res.send(result);
         });
-    }).put((req, res) => {
-    db.query(sql.updateGoalkeeperStats, req.body, (err, result) => {
+    });
+router.route('/player/stats/goalkeeper/:season/:numb').put((req, res) => {
+    db.query(sql.updateGoalkeeperStats, [req.body,req.params.numb,req.params.season], (err, result) => {
         if (err) throw err;
         res.send(result);
     });
@@ -292,8 +294,9 @@ router.route('/player/stats/halfback')
             if (err) throw err;
             res.send(result);
         });
-    }).put((req, res) => {
-    db.query(sql.updateHalfbackStats, req.body, (err, result) => {
+    });
+router.route('/player/stats/halfback/:season/:numb').put((req, res) => {
+    db.query(sql.updateHalfbackStats, [req.body,req.params.numb,req.params.season], (err, result) => {
         if (err) throw err;
         res.send(result);
     });

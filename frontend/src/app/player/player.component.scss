@@ -140,6 +140,17 @@ form {
   color: $color_2;
   align-self: center;
 }
+.club--print-text {
+  font-family: $header_font;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 16px;
+  //line-height: 14px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: $color_2;
+  align-self: center;
+}
 
 .club__name {
   font-family: $header_font;
@@ -149,9 +160,22 @@ form {
   color: #01134e;
   align-self: center;
 }
+.club__name-print {
+  font-family: $header_font;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 15px;
+  color: #01134e;
+  align-self: center;
+}
 
 .clubs, .club__heder, .club__info {
   display: flex;
+}
+
+.club__heder-print{
+  display: flex;
+  justify-content: center;
 }
 
 .club__info {

@@ -13,7 +13,7 @@
                 <p class="player__name">{{player.First_Name}}</p>
               </div>
               <mat-form-field *ngIf="!edited" class="form__input">
-                <input matInput type="text" formControlName="First_Name" pattern="[A-Z,А-Я]{1}[a-z,а-я]{2,20}"
+                <input matInput type="text" formControlName="First_Name" pattern="[A-Z,А-Я,І]{1}[a-z,а-я,і]{2,20}"
                        placeholder="Ім'я:" value="{{player.First_Name}}"/>
               </mat-form-field>
               <div *ngIf="edited" class="player__item">
@@ -21,7 +21,7 @@
                 <p class="player__name">{{player.Surname}}</p>
               </div>
               <mat-form-field *ngIf="!edited" class="form__input">
-                <input matInput type="text" formControlName="Surname" pattern="[A-Z,А-Я]{1}[a-z,а-я]{2,20}"
+                <input matInput type="text" formControlName="Surname" pattern="[A-Z,А-Я,І]{1}[a-z,а-я,і]{2,20}"
                        placeholder="Прізвище:" value="{{player.Surname}}"/>
               </mat-form-field>
               <div *ngIf="edited" class="player__item">
@@ -29,7 +29,7 @@
                 <p class="player__name">{{player.Patronymic}}</p>
               </div>
               <mat-form-field *ngIf="!edited" class="form__input">
-                <input matInput type="text" formControlName="Patronymic" pattern="[A-Z,А-Я]{1}[a-z,а-я]{2,20}"
+                <input matInput type="text" formControlName="Patronymic" pattern="[A-Z,А-Я,І]{1}[a-z,а-я,і]{2,20}"
                        placeholder="По-батькові:" value="{{player.Patronymic}}"/>
               </mat-form-field>
               <div *ngIf="edited" class="player__item">
@@ -51,7 +51,8 @@
               </mat-form-field>
               <div *ngIf="edited" class="player__item">
                 <p class="player--text">Клуб:</p>
-                <p class="player__name complaints__count" *ngIf="player.Name_Club!=null" [routerLink]="['/club',player.Name_Club]">{{player.Name_Club}}</p>
+                <p class="player__name complaints__count" *ngIf="player.Name_Club!=null"
+                   [routerLink]="['/club',player.Name_Club]">{{player.Name_Club}}</p>
                 <p class="player__name" *ngIf="player.Name_Club==null">-</p>
 
               </div>
@@ -163,6 +164,37 @@
     <mat-expansion-panel (opened)="panelOpenState = true"
                          (closed)="panelOpenState = false">
       <mat-expansion-panel-header *ngIf="clubs[0].Active==1">
+        <button mat-raised-button style="margin-right: 10px; background-color: blanchedalmond;" (click)="printComponent('component1')">Print</button>
+        <div id="component1" style="display: none">
+          <div class="club__heder-print"><p class="club--text">Усі контракти
+            гравця {{player.First_Name}} {{player.Surname}}</p>
+          </div>
+          <div *ngIf="clubs[0].Active==null" class="club__heder-print"><p class="club--text">Цей гравець ще не грав у
+            жодному
+            клубі</p>
+          </div>
+          <div class="clubs" *ngFor="let club of clubs; let i = index">
+
+            <div class="club__heder">
+          <span class="material-icons" *ngIf="numEdited!=i && club.Active==0">
+          label_outlined
+          </span>
+              <span class="material-icons" style="margin-right: 24px" *ngIf="numEdited!=i && club.Active==1">
+          label
+          </span>
+              <p class="club--print-text">Клуб:</p>
+              <p class="club__name-print">{{club.Name_Club}}</p>
+
+            </div>
+            <div class="club__info">
+              <p class="club--print-text">Контракт:</p>
+              <p class="club__name-print">{{club.Contract_Start | date}}</p>
+
+              <p class="club--print-text">—</p>
+              <p class="club__name-print">{{club.Contract_End | date}}</p>
+            </div>
+          </div>
+        </div>
         <div class="clubs">
           <div class="club__heder">
             <p class="club--text">Клуб:</p>
@@ -177,6 +209,16 @@
         </div>
       </mat-expansion-panel-header>
       <mat-expansion-panel-header *ngIf="clubs[0].Active==null || clubs[0].Active==0">
+        <button style="margin-right: 10px; background-color: blanchedalmond;" mat-raised-button (click)="printComponent('component2')">Print</button>
+        <div id="component2" style="display: none">
+          <div class="club__heder-print"><p class="club--text">Усі контракти
+            гравця {{player.First_Name}} {{player.Surname}}</p>
+          </div>
+          <div *ngIf="clubs[0].Active==null" class="club__heder-print"><p class="club--text">Цей гравець ще не грав у
+            жодному
+            клубі</p>
+          </div>
+        </div>
         <div class="clubs">
           <div class="club__heder"><p class="club--text">Вільний агент</p></div>
         </div>
@@ -188,7 +230,8 @@
       </div>
       <div *ngFor="let club of clubs; let i = index">
 
-        <form *ngIf="clubs[0].Active!=null" class="clubs" (ngSubmit)="onUpdateContract(i)" [formGroup]="editContractForm">
+        <form *ngIf="clubs[0].Active!=null" class="clubs" (ngSubmit)="onUpdateContract(i)"
+              [formGroup]="editContractForm">
           <div class="club__heder">
           <span class="material-icons" *ngIf="numEdited!=i && club.Active==0">
           label_outlined
@@ -314,7 +357,8 @@
           </button>
         </div>
       </div>
-      <p *ngIf="addStats && (positionSelected || (player.Position == null ? false : player.Position[0].length == 1)) && seasons.length==0"
+      <p
+        *ngIf="addStats && (positionSelected || (player.Position == null ? false : player.Position[0].length == 1)) && seasons.length==0"
         class="stats--header">статистика за обраними критеріями відсутня</p>
       <table mat-table *ngIf="addStats && selectedSeason && selectedPosition=='Forward'" [dataSource]="dataSource"
              class="mat-elevation-z8">
@@ -358,7 +402,7 @@
           <td mat-cell *matCellDef="let element"> {{element.Key_Pass}} </td>
         </ng-container>
         <ng-container matColumnDef="Hit_Match">
-          <th mat-header-cell *matHeaderCellDef>Удар/Матч</th>
+          <th mat-header-cell *matHeaderCellDef>Удар/Сезон</th>
           <td mat-cell *matCellDef="let element"> {{element.Hit_Match}} </td>
         </ng-container>
         <ng-container matColumnDef="Goal_Match">
@@ -502,7 +546,8 @@
           ДОДАТИ СТАТИСТИКУ
         </button>
       </div>
-      <mat-form-field class="form__input" *ngIf="!addStats && !editStats && (player.Position == null ? false : player.Position[0].length > 1)">
+      <mat-form-field class="form__input"
+                      *ngIf="!addStats && !editStats && (player.Position == null ? false : player.Position[0].length > 1)">
         <mat-select placeholder="Оберіть позицію" [(ngModel)]="addStatsPorition">
           <mat-option *ngFor="let pos of player.Position" [value]="pos">{{pos}}</mat-option>
         </mat-select>
@@ -591,7 +636,7 @@
           </mat-form-field>
           <mat-form-field class="form__input">
             <input matInput type="number" min="0" formControlName="FHit_Match"
-                   placeholder="Кількість ударів за матч:"/>
+                   placeholder="Кількість ударів за сезон:"/>
           </mat-form-field>
           <div style="display: flex; justify-content: space-around">
             <button mat-raised-button class="save__button" [disabled]="!addStatsForward.valid" disabled type="submit">

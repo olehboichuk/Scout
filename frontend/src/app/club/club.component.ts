@@ -26,6 +26,7 @@ export class ClubComponent implements OnInit {
   private stats: any;
   private clubCountTournament: any;
   private dataSource: any;
+  private prvPhone: any;
   private displayedColumns: string[] = ['Name', 'Citizenship', 'Cost', 'Salary', 'Position'];
   @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
 
@@ -45,7 +46,8 @@ export class ClubComponent implements OnInit {
       Name_Club: ['', Validators.required],
       City: ['', Validators.required],
       Street: ['', Validators.required],
-      Build: ['', Validators.required]
+      Build: ['', Validators.required],
+      // Phone: ['']
     });
     this.route.paramMap.subscribe((paramMap: ParamMap) => {
       if (paramMap.has('name')) {
@@ -53,8 +55,6 @@ export class ClubComponent implements OnInit {
       }
       this.authService.getClub(this.clubName).subscribe(res => {
         this.club = res[0];
-
-        console.log(this.clubName);
         this.authService.getClubPlayers(this.clubName).subscribe(res => {
           this.players = res;
           this.dataSource = new MatTableDataSource(this.players);
@@ -62,7 +62,7 @@ export class ClubComponent implements OnInit {
           this.authService.getClubStats(this.clubName).subscribe(res => {
             this.stats = res[0];
             console.log(this.stats);
-            this.authService.getClubCountTournament(this.clubName).subscribe(res=>{
+            this.authService.getClubCountTournament(this.clubName).subscribe(res => {
               this.clubCountTournament = res[0];
               console.log(this.clubCountTournament);
               this.loading = false;
@@ -79,6 +79,11 @@ export class ClubComponent implements OnInit {
     this.changeForm.controls['City'].setValue(this.club.City);
     this.changeForm.controls['Street'].setValue(this.club.Street);
     this.changeForm.controls['Build'].setValue(this.club.Build);
+    // if (this.club.Telephone != null && this.club.Telephone.length > 5){
+    //
+    //   this.changeForm.controls['Phone'].setValue(this.club.Telephone);
+    //   this.prvPhone = this.club.Telephone;
+    // }
   }
 
   onCancel() {
@@ -98,14 +103,17 @@ export class ClubComponent implements OnInit {
       Build: this.changeForm.get('Build').value,
     };
     this.loading = true;
+    // console.log(this.changeForm.get('Phone').value);
     this.authService.updateClub(club, this.club.Name_Club).subscribe(res => {
-      if (this.club.Name_Club != this.changeForm.get('Name_Club').value) {
-        this.edited = true;
-        this.loading = false;
-        this.router.navigate(['/club/', this.changeForm.get('Name_Club').value]);
-      } else {
-        this.ngOnInit();
-      }
+      // this.authService.updatePhone({phone: this.changeForm.get('Phone').value, prv: this.prvPhone}, this.club.Name_Club).subscribe(res => {
+        if (this.club.Name_Club != this.changeForm.get('Name_Club').value) {
+          this.edited = true;
+          this.loading = false;
+          this.router.navigate(['/club/', this.changeForm.get('Name_Club').value]);
+        } else {
+          this.ngOnInit();
+        }
+      // });
     });
   }
 
